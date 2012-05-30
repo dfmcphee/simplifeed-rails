@@ -19,6 +19,8 @@ gem 'linkedin'
 gem 'koala' # Facebook
 gem "google-spreadsheet-ruby"
 
+gem 'capistrano'
+
 gem 'flutie'
 gem 'haml'
 
