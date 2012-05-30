@@ -28,5 +28,6 @@ group :assets do
   gem 'html5-boilerplate'
   gem 'sass-rails'
   gem 'compass-rails'
+  gem 'uglifier'
 end
 
