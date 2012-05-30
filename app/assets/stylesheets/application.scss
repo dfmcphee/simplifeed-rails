@@ -1,0 +1,81 @@
+@import "compass/reset";
+@import "compass/layout";
+
+@import "bootstrap";
+
+@import "partials/base";
+@import "partials/page";
+@import "partials/blockquote";
+ 
+@include sticky-footer(80px, "#container", "#container-footer", "#footer");
+
+// Force a short page to keep the sticky footer from running off the bottom
+html, body { height: 98%; }
+
+#post, #instructions, #login {
+  height: 100px;
+}
+
+#login {
+  list-style-type: none;
+  float: left;
+  margin: 0 10px 0 0;
+  padding-left: 0;
+
+  a {
+    display: block;
+    height: 22px;
+    width: 150px;
+    margin: 4px 0px;
+    
+    &:hover {
+      background-position: 0px -24px;
+    }
+
+    &.twitter { background-image: url(/images/buttons/twitter_signin.png); }
+    &.facebook { background-image: url(/images/buttons/facebook_signin.png); }
+    &.linkedin { background-image: url(/images/buttons/linkedin_signin.png); }
+  }
+  
+}
+
+#post {
+  height: 270px;
+  width: 632px;
+  
+  textarea {
+    height: 72px;
+    width: 550px;
+    float: left;
+    margin-right: 5px;
+  }
+  
+  ul li {
+    height: 18px;
+    margin-bottom: 2px;
+    
+    input, img {
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+#simplifeed {
+	padding-top:10px
+}
+
+#instructions {
+  font: 150%;
+}
+
+#flash {
+  font-size: 80%;
+  margin: 0 0 8px;
+  padding: 8px;
+}
+
+#post-providers li {
+	display:inline;
+	list-style-type: none;
+}

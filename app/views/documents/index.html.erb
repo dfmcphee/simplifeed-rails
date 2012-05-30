@@ -1,0 +1,7 @@
+<h1>Google Spreadsheets</h1>
+
+<ul id="docs">
+  <% @docs.each do |doc| %>
+    <li><%= link_to(doc.title, doc.link)%>
+  <% end %>
+</ul>

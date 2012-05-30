@@ -1,0 +1,32 @@
+<div class="row-fluid">
+	<div class="span3"></div>
+	<div class="span6">
+		<h2>Sign in</h2>
+		
+		<%= form_for(resource, :html => { :class => ""}, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+		  <fieldset>
+		    <legend>Legend text</legend>
+			  <div class="control-group">
+			  	<%= f.label :email %>
+			  	<%= f.email_field :email %>
+			  </div>
+			
+			  <div class="control-group">
+			  <%= f.label :password %>
+			  <%= f.password_field :password %></div>
+			
+			  <% if devise_mapping.rememberable? %>
+			    <label class ="checkbox">
+			    Remember me
+			    <%= f.check_box :remember_me %>
+			    </label>
+			  <% end %>
+			  <div class="form-actions">
+			  	<div><%= f.submit "Sign in", :class =>"btn btn-primary" %></div>
+			  </div>
+		  </fieldset>
+		<% end %>
+		
+		<%= render :partial => "devise/shared/links" %>
+	</div>
+</div>
