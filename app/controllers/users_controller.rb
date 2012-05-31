@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!
   # Get stream updates from Facebook, Twitter, and LinkedIn
   def show
-    @providers = %w(facebook twitter linkedin)
+    @providers = %w(facebook twitter)
     if current_user
     	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
     end

@@ -1,7 +1,7 @@
-<% if current_user %>
 <a class="btn btn-info" data-toggle="modal" href="#add-provider">
 	<i class="icon-user icon-white"></i> Connect Account
 </a>
+
 <a class="btn btn-inverse pull-right" data-toggle="modal" href="#post">
 	<i class="icon-plus icon-white"></i> Add Post
 </a>
@@ -22,54 +22,58 @@
 	</div>
 </div>
 
-<% end %>
+<div id="post" class="modal hide fade">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Add Post</h3>
+	</div>
+	<%= form_for :post do |f| %>
+	    <div class="modal-body">
+	    	<%= text_area_tag :body %>
+			      <ul id="post-providers">
+			        <% @providers.each do |provider| %>
+			          <% if @authorized_providers.include?(provider) %>
+				          <li>
+				           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
+				            <img src="/images/buttons/<%=provider%>_16.png" />
+				          </li>
+			          <% end %>
+			        <% end %>
+			      </ul>
+			 </div>
+			 <div class="modal-footer">f
+			 	<%= f.submit 'Post', :class => 'btn btn-primary' %>
+			 </div>
+		</div>
+	<% end %>
+</div>
+
+
 <div id="simplifeed" class="row-fluid">
-	<% if current_user %>
-	  <div id="post" class="modal hide fade">
-		<div class="modal-header">
-	    	<button class="close" data-dismiss="modal">×</button>
-	    	<h3>Add Post</h3>
-	    </div>
-	    <%= form_for :post do |f| %>
-		    <div class="modal-body">
-		    	<%= text_area_tag :body %>
-				      <ul id="post-providers">
-				        <% @providers.each do |provider| %>
-				          <% if @authorized_providers.include?(provider) %>
-					          <li>
-					           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
-					            <img src="/images/buttons/<%=provider%>_16.png" />
-					          </li>
-				          <% end %>
-				        <% end %>
-				      </ul>
-				 </div>
-				 <div class="modal-footer">
-				 	<%= f.submit 'Post', :class => 'btn btn-primary' %>
-				 </div>
-			</div>
-	    <% end %>
-	  </div>
 	  <div id="feeds">
 	    <% @updates.sort_by(&:when).reverse.each do |update| %>
 	     <div class="well <%= update.service %>">
-	        <p class="who <%= update.service %>"> <%= update.who %></p>
-	        <p class="what">
-	          <% if image = update.try(:image) %>
-	            <% if link = update.try(:link) %>
-	              <%= link_to(image_tag(image), link) %>
-	            <% else %>
-	              <%= image_tag(image) %>
-	            <% end %>
-	          <% end %>
-	          <%= raw(auto_link(update.what)) %>
-	        </p>
+	        <div class="row-fluid">
+		        <p class="who <%= update.service %>">
+		        	<%= update.who %>
+		        </p>
+	        </div>
+	        <div class="row-fluid">
+		        <div class="span2">
+		        	<%= image_tag(update.pic) %>
+		        </div>
+		        <div class="span8 what">
+		          <% if image = update.try(:image) %>
+		            <% if link = update.try(:link) %>
+		              <%= link_to(image_tag(image), link) %>
+		            <% else %>
+		              <%= image_tag(image) %>
+		            <% end %>
+		          <% end %>
+		          <%= raw(auto_link(update.what)) %>
+		        </div>
+	        </div>
 	      </div>
 	    <% end %>
 	  </div>
-	<% else %>
-	  <div id="instructions">
-	  	Log in via your favorite services, then see your feed show up from those services.
-	  </div>
-	<% end %>
 </div>

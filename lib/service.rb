@@ -37,6 +37,7 @@ module Service
         OpenStruct.new({
           :service => 'twitter',
           :who => update.user.name,
+          :pic => update.user.profile_image_url,
           :what => update.text,
           :when => update.created_at
         })
@@ -84,9 +85,13 @@ module Service
         else
           update['message']
         end
+        
+        pic = @client.get_picture(update['from']['id'])
+        
         OpenStruct.new({
           :service => 'facebook',
           :who => update['from']['name'],
+          :pic => pic,
           :what => message,
           :when => Time.parse(update['updated_time']),
           :image => update['picture'],
