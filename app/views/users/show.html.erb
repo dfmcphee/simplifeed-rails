@@ -27,25 +27,24 @@
 		<button class="close" data-dismiss="modal">×</button>
 		<h3>Add Post</h3>
 	</div>
-	<%= form_for :post do |f| %>
-	    <div class="modal-body">
-	    	<%= text_area_tag :body %>
-			      <ul id="post-providers">
-			        <% @providers.each do |provider| %>
-			          <% if @authorized_providers.include?(provider) %>
-				          <li>
-				           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
-				            <img src="/images/buttons/<%=provider%>_16.png" />
-				          </li>
-			          <% end %>
-			        <% end %>
-			      </ul>
-			 </div>
-			 <div class="modal-footer">f
-			 	<%= f.submit 'Post', :class => 'btn btn-primary' %>
-			 </div>
-		</div>
-	<% end %>
+	<%= form_tag(:action => 'post') %>
+    <div class="modal-body">
+    	<%= text_area_tag :body %>
+		      <ul id="post-providers">
+		        <% @providers.each do |provider| %>
+		          <% if @authorized_providers.include?(provider) %>
+			          <li>
+			           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
+			            <img src="/images/buttons/<%=provider%>_16.png" />
+			          </li>
+		          <% end %>
+		        <% end %>
+		      </ul>
+		 </div>
+		 <div class="modal-footer">
+		 	<input type="submit" value="Post" class="btn btn-primary" />
+		 </div>
+	</div>
 </div>
 
 
