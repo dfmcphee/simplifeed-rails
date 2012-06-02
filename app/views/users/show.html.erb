@@ -50,11 +50,11 @@
 
 
 <div id="simplifeed" class="row-fluid">
-	  <div id="feeds">
+	  <div id="feeds" class="span12">
 	    <% @updates.sort_by(&:when).reverse.each do |update| %>
 	     <div class="well <%= update.service %>">
 	        <div class="row-fluid">
-		        <p class="who <%= update.service %>">
+		        <p class="span4 who <%= update.service %>">
 		        	<%= update.who %>
 		        </p>
 	        </div>

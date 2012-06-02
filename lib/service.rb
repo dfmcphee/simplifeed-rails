@@ -86,7 +86,7 @@ module Service
           update['message']
         end
         
-        pic = @client.get_picture(update['from']['id'])
+        pic = 'http://graph.facebook.com/' + update['from']['id'] + '/picture'
         
         OpenStruct.new({
           :service => 'facebook',
