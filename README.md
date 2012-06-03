@@ -1,4 +1,4 @@
-Welcome to Simplifeed
+*Welcome to Simplifeed
 
 About
 =====
