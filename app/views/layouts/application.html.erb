@@ -50,14 +50,16 @@
 		      </div>
 	      </div>
 	      <%= yield %>
+		  <div class="row-fluid">
+		    <footer id="footer">
+			    <div class="copyright">
+			      Copyright &copy;
+			      <a href="http://www.simplifeed.me/">Simplifeed</a>
+			      <h5 id="footer-year"> <%= Date.today.year %></h5>
+			    </div>
+		    </footer>
+		  </div>
 	    </div>
 	  </div>
-	  <footer id="footer">
-	    <div class="copyright">
-	      Copyright &copy;
-	      <a href="http://www.simplifeed.me/">Simplifeed</a>
-	      <h5 id="footer-year"> <%= Date.today.year %></h5>
-	    </div>
-	  </footer>
 	</body>
 </html>

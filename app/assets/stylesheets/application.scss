@@ -12,6 +12,10 @@
 // Force a short page to keep the sticky footer from running off the bottom
 html, body { height: 98%; }
 
+.align-right {
+	text-align: right;
+}
+
 #post, #instructions, #login {
   height: 100px;
 }
