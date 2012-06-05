@@ -34,10 +34,13 @@ module Service
 
     def feed
       @client.home_timeline.collect do |update|
+      
+      	pic = 'https://api.twitter.com/1/users/profile_image?screen_name=' + update.user.screen_name + '&size=bigger'
+      
         OpenStruct.new({
           :service => 'twitter',
           :who => update.user.name,
-          :pic => update.user.profile_image_url,
+          :pic => pic,
           :what => update.text,
           :when => update.created_at
         })
@@ -62,7 +65,7 @@ module Service
           :service => 'linkedin',
           :who => "#{update.profile.first_name} #{update.profile.last_name}",
           :what => update.profile.current_status,
-          :when => Time.at(update.timestamp / 1000)
+          :when => Time.at(update.timestamp / 1000),
         })
       end
     end
@@ -80,13 +83,22 @@ module Service
 
     def feed
       @client.get_connections("me", "home").collect do |update|
+        
         message = if update['type'] == 'link'
           [update['name'], update['description']].compact.join(': ')
         else
           update['message']
         end
         
-        pic = 'http://graph.facebook.com/' + update['from']['id'] + '/picture'
+        pic = 'http://graph.facebook.com/' + update['from']['id'] + '/picture?type=large'
+        
+        if update['type'] == 'photo'
+        	picture = @client.get_picture(update['object_id'])
+        	photo = picture['source']
+        else
+        	photo = update['picture']
+        end
+        
         
         OpenStruct.new({
           :service => 'facebook',
@@ -94,7 +106,7 @@ module Service
           :pic => pic,
           :what => message,
           :when => Time.parse(update['updated_time']),
-          :image => update['picture'],
+          :image => photo,
           :link => update['link']
         })
       end

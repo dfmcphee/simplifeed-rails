@@ -35,7 +35,7 @@
 		          <% if @authorized_providers.include?(provider) %>
 			          <li>
 			           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
-			            <img src="/images/buttons/<%=provider%>_16.png" />
+			            <img src="/images/buttons/<%=provider%>_32.png" />
 			          </li>
 		          <% end %>
 		        <% end %>
@@ -51,41 +51,44 @@
 <div id="simplifeed" class="row-fluid">
 	  <div id="feeds" class="span12">
 	    <% @updates.sort_by(&:when).reverse.each do |update| %>
-	     <div class="well <%= update.service %>">
-	        <div class="row-fluid">
-		        <div class="span4">
-		        	<p class="who <%= update.service %>">
-		        		<%= update.who %>
-		        	</p>
-		        </div>
-		        <div class="span5"></div>
-		        <div class="span3 align-right">
-		        	<abbr class="timeago" title="<%=update.when%>"><%=update.when%></abbr>
-		        </div>
-	        </div>
-	        <div class="row-fluid">
-		        <div class="span2">
-		        	<%= image_tag(update.pic) %>
-		        </div>
-		        
-		          <% if image = update.try(:image) %>
-		          	<div class="span2">
-		            <% if link = update.try(:link) %>
-		              <%= link_to(image_tag(image), link) %>
-		            <% else %>
-		              <%= image_tag(image) %>
-		            <% end %>
-		          </div>
-		          <div class="span8">
-		          	<%= raw(auto_link(update.what)) %>
-		          </div>
-		          <% else %>
-		          <div class="span10">
-		          	<%= raw(auto_link(update.what)) %>
-		          </div>
-		          <% end %>
-	        </div>
-	      </div>
+	    	<% if update.what != nil %>
+			     <div class="well <%= update.service %>">
+			        <div class="row-fluid">
+				        <div class="span6">
+				        	<p class="who <%= update.service %>">
+				        		<%= update.who %>
+				        	</p>
+				        </div>
+				        <div class="span3"></div>
+				        <div class="span3 align-right">
+				        	<abbr class="timeago" title="<%=update.when%>"><%=update.when%></abbr>
+				        </div>
+			        </div>
+			        <div class="row-fluid">
+				        <div class="span2">
+				        	<%= image_tag(update.pic) %>
+				        </div>
+				        
+				          <% if image = update.try(:image) %>
+				          	<div class="span2">
+				            <% if link = update.try(:link) %>
+				              <%= link_to(image_tag(image), link) %>
+				            <% else %>
+				              <%= image_tag(image) %>
+				            <% end %>
+				            </div>
+				            
+				            <div class="span7">
+				          		<%= raw(auto_link(update.what)) %>
+				          		</div>
+				          <% else %>
+				          	<div class="span9">
+				          		<%= raw(auto_link(update.what)) %>
+				          		</div>
+				          <% end %>
+			        </div>
+			      </div>
+			 <% end %>
 	    <% end %>
 	  </div>
 </div>
