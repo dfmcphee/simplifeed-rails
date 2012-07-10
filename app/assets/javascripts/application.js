@@ -1,5 +1,46 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
+
+// Enable pusher logging - don't include this in production
+
+$(document).ready(function() {
+	Pusher.log = function(message) {
+		if (window.console && window.console.log) window.console.log(message);
+	};
+	
+	// Flash fallback logging - don't include this in production
+	WEB_SOCKET_DEBUG = true;
+	
+	var pusher = new Pusher('6a893338845f2e5a617a');
+	var channel = pusher.subscribe('simplifeed');
+	channel.bind(event_id, function(data) {
+		if (data.message) {
+			var count = parseInt($('#notification-count').html());
+			count++;
+			$('#notification-count').html(count);
+			$('#notifications .empty').remove();
+			$('#notifications').append(data.message);
+			$('#notification-count').addClass('badge-info');
+			
+			var alert_id = 'alert-' + Math.floor(Math.random()*9999999);
+			
+			var html = '<div id="' + alert_id + '" class="span12 alert alert-info">';
+		    html += '<a class="close" data-dismiss="alert" href="#">×</a>';
+		    html += '<p>'
+			html += '<span class="text">' + data.message + '</span></p></div>';
+
+			$('#growl-notifications').append(html);
+			
+			var timeout = window.setTimeout(function() {
+			    $('#' + alert_id).fadeOut();
+			}, 6000);
+		}
+	});
+});
+
+/*
+ * bootstrap.growl.js
+ */
 /**
  * Timeago is a jQuery plugin that makes it easy to support automatically
  * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
@@ -15,6 +56,37 @@
  *
  * Copyright (c) 2008-2012, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
  */
+ 
+ !function( $ ) {
+  $.fn.growl = function ( flash, params ) {
+    var growl   = this 
+      , params  = params || {}
+      , type    = params.text ? 'text' : 'html'
+      , text    = growl.children('p').find('.text')
+      , label   = growl.children('p').find('.label')
+      , timeout = params.timeout || 5000
+      ;
+
+    function set_msg(severity,css,msg){
+      label[type](severity);
+      label.removeClass('important notice warning new');
+      label.addClass(css);
+      text[type](msg);
+    }
+
+    if(flash.error || flash.notice || flash.warning) {
+       if (flash.error)        { set_msg('Error', 'important', flash.error);   }
+       else if (flash.warning) { set_msg('Warning', 'warning', flash.warning); }
+       else if (flash.info)    { set_msg('Info', 'notice', flash.notice);      }
+       else if (flash.ok)      { set_msg('Ok', 'new', flash.ok);               }
+       growl.show('fast');
+       setTimeout(function() {
+         growl.hide('slow');
+       }, timeout);
+    }
+  };
+}( window.jQuery || window.ender );
+ 
  
 jQuery(document).ready(function() {
   jQuery("abbr.timeago").timeago();

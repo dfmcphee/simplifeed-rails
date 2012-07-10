@@ -1,5 +1,8 @@
 // ALERT STYLES
 // ------------
+.growl     { padding: 10px; position: fixed; top: 5px; left: 50%;
+             margin-left: -70px; background-color: rgba(0,0,0,0.5); z-index: 10; }
+.growl p   { color: #fff; margin: 0px;}
 
 // Base alert styles
 .alert {

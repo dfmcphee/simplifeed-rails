@@ -1,8 +1,8 @@
-<div class="row-fluid">
-	<div class="alert alert-error span12">
-		<%= devise_error_messages! %>
-	</div>
-</div>
+<% if !devise_error_messages!.empty? %>
+    <div class="row-fluid flash">
+    	<div class="alert alert-error span12"><%= devise_error_messages! %></div>
+    </div>
+<% end %>
 <div class="row-fluid">
 	<div class="span3"></div>
 	<div class="span6">
@@ -12,6 +12,11 @@
 			  <div class="control-group">
 			  	<%= f.label :email %>
 			  	<%= f.email_field :email %>
+			  </div>
+			  
+			  <div class="control-group">
+			  	<%= f.label :username %>
+			  	<%= f.text_field :username %>
 			  </div>
 			
 			  <div class="control-group">

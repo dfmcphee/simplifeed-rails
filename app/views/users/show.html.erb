@@ -1,3 +1,16 @@
+<% if @simplifeed.empty? %>
+	<div class="row-fluid">
+		<div class="span12 hero-unit">
+			<h2>Welcome to Simplifeed.</h2>
+			<h3>To get started, add some friends.</h3>
+			<%= form_tag(:action => 'request_friendship') %>
+				<input name="friend_username" type="text" class="" style="margin: 0 auto;" autocomplete="off" data-provide="typeahead" data-items="8" data-source='<%= @users.to_json %>'>
+				<input type="submit" value="Send Friend Request" class="btn btn-primary" />
+			</form>
+		</div>
+	</div>
+<% end %>
+
 <a class="btn btn-info" data-toggle="modal" href="#add-provider">
 	<i class="icon-user icon-white"></i> Connect Account
 </a>
@@ -45,45 +58,41 @@
 		 	<input type="submit" value="Post" class="btn btn-primary" />
 		 </div>
 	</div>
+	</form>
 </div>
 
 
 <div id="simplifeed" class="row-fluid">
 	  <div id="feeds" class="span12">
-	    <% @updates.sort_by(&:when).reverse.each do |update| %>
-	     <div class="well <%= update.service %>">
+	  
+	  <% @simplifeed.sort {|a, b| a[:created_at] <=> b[:created_at]}.reverse.each do |post| %>
+	  	<% user = User.find(post.user_id) %>
+	  	<div class="well simplifeed">
 	        <div class="row-fluid">
 		        <div class="span4">
-		        	<p class="who <%= update.service %>">
-		        		<%= update.who %>
+		        	<p class="lead">
+		        		<% if user.first_name != nil && user.last_name != nil %>
+		        			<%= user.first_name %> <%= user.last_name %>
+		        		<% else %>
+		        			<%= user.username %>
+		        		<% end %>
 		        	</p>
 		        </div>
 		        <div class="span5"></div>
 		        <div class="span3 align-right">
-		        	<abbr class="timeago" title="<%=update.when%>"><%=update.when%></abbr>
+		        	<abbr class="timeago" title="<%=post.created_at.to_time.iso8601%>"><%=post.created_at.to_time.iso8601%></abbr>
 		        </div>
 	        </div>
 	        <div class="row-fluid">
 		        <div class="span2">
-		        	<%= image_tag(update.pic) %>
+		        	<% if user.photo.url(:thumb) %>
+		        	  <%= image_tag(user.photo.url(:thumb)) %>
+		        	<% end %>
 		        </div>
 		        
-		          <% if image = update.try(:image) %>
-		          	<div class="span2">
-		            <% if link = update.try(:link) %>
-		              <%= link_to(image_tag(image), link) %>
-		            <% else %>
-		              <%= image_tag(image) %>
-		            <% end %>
-		          </div>
-		          <div class="span8">
-		          	<%= raw(auto_link(update.what)) %>
-		          </div>
-		          <% else %>
 		          <div class="span10">
-		          	<%= raw(auto_link(update.what)) %>
+		          	<%= raw(auto_link(post.content)) %>
 		          </div>
-		          <% end %>
 	        </div>
 	      </div>
 	    <% end %>

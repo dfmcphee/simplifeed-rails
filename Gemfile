@@ -8,6 +8,12 @@ gem 'rails_autolink'
 
 gem "devise", "~> 2.1.0"
 
+gem "paperclip", "~> 3.0"
+
+gem "pusher", "~> 0.9.4"
+gem 'em-http-request'
+gem 'eventmachine'
+
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
