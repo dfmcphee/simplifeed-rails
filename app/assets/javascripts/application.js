@@ -1,16 +1,9 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
-// Enable pusher logging - don't include this in production
+// Pusher notifications
 
 $(document).ready(function() {
-	Pusher.log = function(message) {
-		if (window.console && window.console.log) window.console.log(message);
-	};
-	
-	// Flash fallback logging - don't include this in production
-	WEB_SOCKET_DEBUG = true;
-	
 	var pusher = new Pusher('6a893338845f2e5a617a');
 	var channel = pusher.subscribe('simplifeed');
 	channel.bind(event_id, function(data) {
@@ -36,11 +29,60 @@ $(document).ready(function() {
 			}, 6000);
 		}
 	});
+	
+	$('.open-edit-post').on('click', function () {
+	  var post_id = $(this).attr('post');
+	  var content = $(this).closest('.post-item').find('.post-content').html();
+	  $('#post_id').val(post_id);
+	  $('#edit-post #body').val(content);
+	});
+	
+	$('.open-confirm-delete').on('click', function () {
+	  var post_id = $(this).attr('post');
+	  $('#confirm-delete-form').attr('action', '/posts/' + post_id);
+	});
+	
+	
+	setInterval(updateChatList,15000);
 });
 
-/*
- * bootstrap.growl.js
- */
+var updateChatList = function() {
+	$.getJSON('chat.json', function(data) {
+		var online_count = data.online.length;
+		$("#messages").html('');
+		$('#message-count').html(online_count);
+		$.each(data.recent, function(i,friend){
+			if (($.inArray(friend.id, data.online)) >= 0) {
+				var friend_cell = '<li><a href="#">' + friend.username + ' <span class="label label-info pull-right">Online</span></a></li>';
+				$('#message-count').addClass('badge-info');
+			}
+			else {
+				var friend_cell = '<li><a href="#">' + friend.username + '</a></li>';
+				$('#message-count').removeClass('badge-info');
+			}
+		    $("#messages").append(friend_cell);
+		});
+	});
+};
+
+$(function () {
+  $('.upload').fileUploadUI({
+        uploadTable: $('.upload_files'),
+        downloadTable: $('.download_files'),
+        buildUploadRow: function (files, index) {
+            var file = files[index];
+            return $('<tr><td>' + file.name + '<\/td>' +
+                    '<td class="file_upload_progress"><div><\/div><\/td>' +
+                    '<td class="file_upload_cancel">' +
+                    '<button class="ui-state-default ui-corner-all" title="Cancel">' +
+                    '<span class="ui-icon ui-icon-cancel">Cancel<\/span>' +
+                    '<\/button><\/td><\/tr>');
+        },
+        buildDownloadRow: function (file) {
+            return $('<tr><td><img alt="Photo" width="40" height="40" src="' + file.pic_path + '">' + file.name + '<\/td><\/tr>');
+        },
+    });
+});
 /**
  * Timeago is a jQuery plugin that makes it easy to support automatically
  * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
@@ -56,36 +98,6 @@ $(document).ready(function() {
  *
  * Copyright (c) 2008-2012, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
  */
- 
- !function( $ ) {
-  $.fn.growl = function ( flash, params ) {
-    var growl   = this 
-      , params  = params || {}
-      , type    = params.text ? 'text' : 'html'
-      , text    = growl.children('p').find('.text')
-      , label   = growl.children('p').find('.label')
-      , timeout = params.timeout || 5000
-      ;
-
-    function set_msg(severity,css,msg){
-      label[type](severity);
-      label.removeClass('important notice warning new');
-      label.addClass(css);
-      text[type](msg);
-    }
-
-    if(flash.error || flash.notice || flash.warning) {
-       if (flash.error)        { set_msg('Error', 'important', flash.error);   }
-       else if (flash.warning) { set_msg('Warning', 'warning', flash.warning); }
-       else if (flash.info)    { set_msg('Info', 'notice', flash.notice);      }
-       else if (flash.ok)      { set_msg('Ok', 'new', flash.ok);               }
-       growl.show('fast');
-       setTimeout(function() {
-         growl.hide('slow');
-       }, timeout);
-    }
-  };
-}( window.jQuery || window.ender );
  
  
 jQuery(document).ready(function() {

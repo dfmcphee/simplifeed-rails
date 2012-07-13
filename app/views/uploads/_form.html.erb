@@ -1,0 +1,33 @@
+<%= form_for(@upload) do |f| %>
+  <% if @upload.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@upload.errors.count, "error") %> prohibited this upload from being saved:</h2>
+
+      <ul>
+      <% @upload.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :picture_file_name %><br />
+    <%= f.text_field :picture_file_name %>
+  </div>
+  <div class="field">
+    <%= f.label :picture_content_type %><br />
+    <%= f.text_field :picture_content_type %>
+  </div>
+  <div class="field">
+    <%= f.label :picture_file_size %><br />
+    <%= f.number_field :picture_file_size %>
+  </div>
+  <div class="field">
+    <%= f.label :picture_update_at %><br />
+    <%= f.datetime_select :picture_update_at %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

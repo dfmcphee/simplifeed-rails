@@ -1,4 +1,6 @@
 Simplifeed::Application.routes.draw do
+  resources :uploads
+
   root :to => 'users#show'
 
   resources :notifications
@@ -21,10 +23,19 @@ Simplifeed::Application.routes.draw do
   # Twitter, Facebook, and LinkedIn feeds
   match '/user/post' => 'users#post'
   
-   # List users, find friends
-  match '/friends' => 'users#list'
+  # Update post content
+  match '/user/update_post' => 'users#update_post'
   
   # List users, find friends
+  match '/friends' => 'users#list'
+  
+  # List recent chat and get online users
+  match '/chat' => 'users#online_friends'
+  
+  # Like post
+  match '/like_post' => 'posts#like_post'
+  
+  # Request friendship
   match '/user/request_friendship' => 'users#request_friendship'
   
   # Approve friendship
@@ -35,4 +46,6 @@ Simplifeed::Application.routes.draw do
 
   # Google docs
   resources :documents
+  
+  get "/:id", :to => "users#profile", :as => :user
 end

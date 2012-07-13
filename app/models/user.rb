@@ -3,10 +3,12 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :lastseenable
+
+  attr_accessor :login
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :username, :first_name, :last_name, :password, :password_confirmation, :remember_me, :name, :image_url, :url, :photo
+  attr_accessible :login, :email, :username, :first_name, :last_name, :password, :password_confirmation, :remember_me, :name, :image_url, :url, :photo
   
   has_attached_file :photo,
     :styles => {
@@ -26,5 +28,22 @@ class User < ActiveRecord::Base
   has_many :requested_friendships, :class_name => "Friendship", :foreign_key => "friend_id", :conditions => "approved = false"
   
   validates_uniqueness_of :username
+  
+  def to_param
+    username
+  end
+  
+  def online?
+	self.last_seen > 5.minutes.ago
+  end
+  
+  protected
+  def self.find_for_database_authentication(conditions)
+    login = conditions.delete(:login)
+    where(conditions)
+    .where(["username = :login OR email = :login", 
+         {:login => login}])
+    .first
+  end
   
 end

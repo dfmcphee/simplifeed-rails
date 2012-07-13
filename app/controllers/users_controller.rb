@@ -11,8 +11,32 @@ class UsersController < ApplicationController
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
 
     @users = User.find(:all, :select=>'username').map(&:username)
-    
+        
     @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id IN (?)', friends])
+    @upload  = Upload.new
+  end
+  
+  def online_friends
+  	@online_friends = []
+  	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id != ?', current_user.id])
+  	
+  	@recent_friends.each do | recent_friend |
+    	if recent_friend.online?
+    		@online_friends.push(recent_friend.id)
+    	end
+    end
+  	
+  	respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'recent' => @recent_friends, 'online' => @online_friends } }
+    end
+  end
+  
+  # Get user profile
+  def profile
+  	@user = User.find_by_username(params[:id])
+  	        
+    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id = ?', @user.id])
   end
   
   def list
@@ -73,6 +97,64 @@ class UsersController < ApplicationController
     redirect_to :action => "show"
   end
   
+  
+  def update_post
+	user = current_user
+	post_id = params[:post_id]
+	content = params[:body]
+	
+	@post = Post.find(post_id)
+	
+	if @post != nil?
+		if @post.user_id === current_user.id
+			@post.content = content
+	
+			if @post.save
+				filter_post(@post)
+				@alert_style = 'success'
+				flash[:notice] = "Post updated."
+			else
+				@alert_style = 'error'
+				flash[:notice] = "Your post could not be saved."
+			end
+		else
+			flash[:notice] = "You are not authorized to update this post."
+		end
+	else
+		flash[:notice] = "Post could not be updated because it could not be found."
+	end
+	
+    redirect_to :action => "show"
+  end
+  
+  def delete_post
+	user = current_user
+	post_id = params[:post_id]
+		
+    @post = Post.find(post_id)
+		
+	if @post != nil?
+		if @post.user_id === current_user.id
+			@post.content = content
+	
+			if @post.destroy
+				filter_post(@post)
+				@alert_style = 'success'
+				flash[:notice] = "Post deleted."
+			else
+				@alert_style = 'error'
+				flash[:notice] = "Your post could not be deleted."
+			end
+		else
+			flash[:notice] = "You are not authorized to delete this post."
+		end
+	else
+		flash[:notice] = "Post could not be deleted because it could not be found."
+	end
+	
+    redirect_to :action => "show"
+  end
+  
   def request_friendship
   	if (params[:friend_username] != '')
 	  	@friend = User.find_by_username(params[:friend_username])
@@ -84,7 +166,7 @@ class UsersController < ApplicationController
 				  	
 				  	if @friendship.save
 				  		message = current_user.username + " would like to be your friend." + view_context.link_to("Approve", :controller => "users", :action => "approve_friendship", :friendship_id => @friendship.id) + " "
-						save_notification(@friend.id, message, 'info')
+						save_notification(@friend.id, message, 'info', 'friendship', @friendship.id)
 						@alert_style = 'success'
 						flash[:notice] = "A friend request has been sent."
 					else
@@ -117,6 +199,12 @@ class UsersController < ApplicationController
 	  if @friendship.friend_id == current_user.id
 	  	@friendship.approved = true
 	  	if @friendship.save
+	  		@notification = Notification.find(:first, :conditions => ["user_id = ? AND target_id = ? AND target_type = 'friendship'", current_user.id, @friendship.id])
+
+		    if @notification != nil?
+		    	@notification.read = true
+		    	@notification.save
+		    end
 	  		@friend = User.find(@friendship.user_id)
 	  		@alert_style = 'success'
 			flash[:notice] = "You and " + @friend.username + " are now friends."
@@ -135,44 +223,4 @@ class UsersController < ApplicationController
 	redirect_to :action => "list"
   end
   
-  def dismiss_notification
-  	if (params[:notification_id] != '')
-  		@notification = Notification.find(params[:notification_id])
-  		if @notification != nil
-  			@notification.read = true
-  			@notification.save
-  		end
-  	end
-  	redirect_to :action => "show"
-  end
-  
-  def filter_post(post)
-  	mentions = post.content.scan(/(^|\s)(@\w+)/)
-  	
-  	mentions.each do |mention|
-  		username = mention[1].gsub('@', '')
-  		mentioned_user = User.find(:first, :conditions => [ "username = ?", username])
-  		if mentioned_user != nil
-  			message = current_user.username + " mentioned you. " + 
-	view_context.link_to("View", :controller => "posts", :action => "show", :id => post.id)
-			save_notification(mentioned_user.id, message, 'info')
-    	end
-  		flash[:notice] = username
-  	end
-  end
-
-  def save_notification(user_id, message, bootstrap_class)
-  	notification = Notification.new
-	notification.user_id = user_id
-	notification.save
-	notification.message = message + " " + view_context.link_to("Dismiss", :controller => "users", :action => "dismiss_notification", :notification_id => notification.id)
-	notification.bootstrap_class = bootstrap_class
-	
-	if notification.save
-		event_id = 'notification-' + user_id.to_s
-		Pusher['simplifeed'].trigger(event_id, {:message => notification.message})
-	end
-	
-  end
-
 end

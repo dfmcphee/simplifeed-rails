@@ -10,8 +10,20 @@
       </ul>
     </div>
   <% end %>
+  
+
 
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+
+<div class="files"> 
+<%= form_for @upload, :html => { :class => "upload", :multipart => true } do |f| %>
+  <%= f.file_field :picture %>
+  <div>Upload files</div>
+<% end %>
+
+<table class="upload_files"></table>
+<table class="download_files"></table>
+</div>
