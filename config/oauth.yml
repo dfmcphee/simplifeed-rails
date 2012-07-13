@@ -1,0 +1,27 @@
+development: &defaults
+  :twitter:
+    :app_id: "iY6LKuf1ntdZeLeiMZOQ"
+    :app_secret: "crsxA4QVyiu6zcREdu4eSSNQC6jEBueKlqv9FpLs"
+  :facebook:
+    :app_id: "156680937757181"
+    :app_secret: "1ae78b73cf39d2d7d2e77609669e58ab"
+    :options:
+      :scope: "publish_stream,read_stream"
+  :linked_in:
+    :app_id: "sw2g0txejpw4"
+    :app_secret: "EKyB4Z5WEDMoOVqT"
+  :google:
+    :app_id: "322826584408.apps.googleusercontent.com"
+    :app_secret: "N-g1nuSF8dba9N6MuajiSWkq"
+    :options:
+      :scope: 'https://docs.google.com/feeds/ https://spreadsheets.google.com/feeds/' # http://code.google.com/apis/gdata/faq.html#AuthScopes
+
+staging:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+

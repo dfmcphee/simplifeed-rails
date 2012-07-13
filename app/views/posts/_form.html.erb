@@ -1,0 +1,29 @@
+<%= form_for(@post) do |f| %>
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% @post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<div class="files"> 
+<%= form_for @upload, :html => { :class => "upload", :multipart => true } do |f| %>
+  <%= f.file_field :picture %>
+  <div>Upload files</div>
+<% end %>
+
+<table class="upload_files"></table>
+<table class="download_files"></table>
+</div>
