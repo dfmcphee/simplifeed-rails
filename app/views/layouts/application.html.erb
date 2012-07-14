@@ -129,7 +129,7 @@
 				  	<div class="chat-feed">
 				     <% chat['messages'].last(10).each do |message| %>
 				     	<% from = User.find(message.from) %>
-				     	<p><%= from.username %>: <%= message.content %> <span class="pull-right"><%= message.created_at.strftime("%I:%M %p") %></span></p>
+				     	<p><%= from.username %>: <%= message.content %> <span class="pull-right"><%= message.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M %p") %></span></p>
 				     <% end %>
 				     </div>
 				  </div>
