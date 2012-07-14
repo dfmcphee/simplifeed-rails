@@ -1,7 +1,7 @@
 <% user = User.find(post.user_id) %>
 <div class="well post-item">
 	<div class="row-fluid">
-	    <div class="span4">
+	    <div class="span6">
 	    	<p class="lead">
 	    		<a href="/<%= user.username %>">
 	    		<% if user.first_name != nil && user.last_name != nil %>
@@ -12,7 +12,7 @@
 	    		</a>
 	    	</p>
 	    </div>
-	    <div class="span5"></div>
+	    <div class="span3"></div>
 	    <div class="span3 align-right">
 	    	<abbr class="timeago" title="<%=post.created_at.to_time.iso8601%>"><%=post.created_at.to_time.iso8601%></abbr>
 	    </div>
@@ -33,7 +33,11 @@
 	        	<div class="btn-group">
 	        		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
 	        		<% if post.user_id === current_user.id %>
-					  <a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i> <span class="badge"><%= likes.size %></span></a>
+	        		  <% if controller.is_liked(post.id) %>
+	        			<button class="btn"><i class="icon-star"></i> <span class="badge"><%= likes.size %></span></button>
+	        		  <% else %>
+					  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i> <span class="badge"><%= likes.size %></span></a>
+					  <% end %>
 					  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 					    <i class="icon-edit"></i>
 					    <span class="caret"></span>

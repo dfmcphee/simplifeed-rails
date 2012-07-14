@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   	redirect_to :action => "show"
   end
   
+  
   def filter_post(post)
   	mentions = post.content.scan(/(^|\s)(@\w+)/)
   	
@@ -66,5 +67,6 @@ class ApplicationController < ActionController::Base
 	    end
     end
   end
+ 
   
 end

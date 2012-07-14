@@ -1,4 +1,6 @@
 Simplifeed::Application.routes.draw do
+  resources :messages
+
   resources :uploads
 
   root :to => 'users#show'
@@ -35,14 +37,20 @@ Simplifeed::Application.routes.draw do
   # Like post
   match '/like_post' => 'posts#like_post'
   
+  # Send message
+  match '/send_message' => 'messages#send_message'
+  
   # Request friendship
   match '/user/request_friendship' => 'users#request_friendship'
   
   # Approve friendship
   match '/user/approve_friendship' => 'users#approve_friendship'
   
-  # Dismiss notification
+  # Mark message read
   match '/user/dismiss_notification' => 'users#dismiss_notification'
+  
+  # Dismiss notification
+  match '/mark_as_read' => 'messages#mark_as_read'
 
   # Google docs
   resources :documents

@@ -6,7 +6,7 @@
 $(document).ready(function() {
 	var pusher = new Pusher('6a893338845f2e5a617a');
 	var channel = pusher.subscribe('simplifeed');
-	channel.bind(event_id, function(data) {
+	channel.bind(notification_event_id, function(data) {
 		if (data.message) {
 			var count = parseInt($('#notification-count').html());
 			count++;
@@ -30,6 +30,39 @@ $(document).ready(function() {
 		}
 	});
 	
+	channel.bind(message_event_id, function(data) {
+		if (data.message) {
+			var count = parseInt($('#message-count').html());
+			count++;
+			$('#message-count').html(count);
+			
+			count = parseInt($('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html());
+			count++;
+			$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html(count);
+			
+			
+			
+			var chat_feed = $('#chat-' + data.friend + ' .chat-feed');
+			
+			var message = '<p>' + data.friend_username + ': ' + data.message + '<span class="pull-right">' + data.time + '</span></p>';
+			
+			chat_feed.append(message);
+
+			$(chat_feed).scrollTop($(chat_feed).height());
+			
+			$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').removeClass('badge-info').addClass('badge-info');
+			
+			$('#message-count').removeClass('badge-info').addClass('badge-info');
+		}
+	});
+	
+	$('.chat-input').keypress(function(e){
+	  if(e.keyCode == 13 && !e.shiftKey) {
+	   e.preventDefault();
+	   $(this).closest(".chat-window").find('.chat-send').click();
+	  }
+	});
+	
 	$('.open-edit-post').on('click', function () {
 	  var post_id = $(this).attr('post');
 	  var content = $(this).closest('.post-item').find('.post-content').html();
@@ -42,6 +75,69 @@ $(document).ready(function() {
 	  $('#confirm-delete-form').attr('action', '/posts/' + post_id);
 	});
 	
+	var messages_content = '';
+	
+	$('.chat-popover').each(function() {
+		messages_content = $(this).find('.chat-popover-content').html();
+		$(this).popover({content:messages_content});
+	});
+	
+	$('.chat-window').each(function(e){
+		$(this).modal({backdrop:false, show:false});
+	});
+	
+	$('.toggle-chat').live('click', function() {
+		var id = $(this).attr('data-target').split('-')[1];
+		
+		$.ajax({ url: '/mark_as_read',
+		  type: 'POST',
+		  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		  data: { friend_id: id },
+		  success: function(response) {
+			  if (response.success) {
+				  var count = parseInt($('#message-count').html());
+				  
+				  count = count - response.count;
+				  $('#message-count').html(count);
+				  
+				  if (count <= 0) {
+					  $('#message-count').removeClass('badge-info');
+				  }
+				  
+				  var $friend_count = $('a[data-target=#chat-' + id + ']').find('.unread-count');
+				  
+				  count = parseInt($friend_count.html());
+				  count = count - response.count;
+				  $friend_count.html(count);
+				  
+				  if (count <= 0) {
+					  $friend_count.removeClass('badge-info');
+				  }
+			  }
+		  }
+		});
+	});
+	
+	$('.chat-send').on('click', function() {
+		var chat_window = $(this).closest('.chat-window');
+		var chat_input = $(chat_window).find('.chat-input');
+		var chat_id = $(chat_input).attr('chat-id');
+		var username = $(chat_input).attr('chat-username');
+		var message = $(chat_input).val();
+		var message_row = '<p>' + username + ': ' + message + '<span class="pull-right">' + getFormattedTime() + '</span></p>';
+
+		$.ajax({ url: '/send_message.json',
+		  type: 'POST',
+		  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		  data: { to: chat_id, message: message },
+		  success: function(response) {
+		    $(chat_window).find('.chat-feed').append(message_row);
+		  	$(chat_input).val('');
+		  }
+		});
+
+	});
+	
 	
 	setInterval(updateChatList,15000);
 });
@@ -50,20 +146,52 @@ var updateChatList = function() {
 	$.getJSON('chat.json', function(data) {
 		var online_count = data.online.length;
 		$("#messages").html('');
-		$('#message-count').html(online_count);
+		var friend_count = '';
+		var friend_cell = '';
 		$.each(data.recent, function(i,friend){
-			if (($.inArray(friend.id, data.online)) >= 0) {
-				var friend_cell = '<li><a href="#">' + friend.username + ' <span class="label label-info pull-right">Online</span></a></li>';
-				$('#message-count').addClass('badge-info');
+			if (data.unread[friend.id] != null && parseInt(data.unread[friend.id]) > 0) {
+				friend_count = '<span class="badge badge-info unread-count">' + data.unread[friend.id] + '</span> ';
 			}
 			else {
-				var friend_cell = '<li><a href="#">' + friend.username + '</a></li>';
-				$('#message-count').removeClass('badge-info');
+				friend_count = '<span class="badge unread-count">0</span> ';
+			}
+			if (($.inArray(friend.id, data.online)) >= 0) {
+				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + ' <span class="label label-info pull-right">Online</span></a></li>';
+			}
+			else {
+				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + '</a></li>';
 			}
 		    $("#messages").append(friend_cell);
 		});
 	});
 };
+
+function getFormattedTime() {
+	var currentTime = new Date();
+	var hours = currentTime.getHours();
+	var minutes = currentTime.getMinutes();
+	
+	if (minutes < 10){
+		minutes = "0" + minutes;
+	}
+	
+	var formatted_hours = hours;
+	
+	if (hours > 12) {
+		formatted_hours = hours - 12;
+	}
+	
+	var formatted = formatted_hours + ":" + minutes + " ";
+	
+	if (hours > 11){
+		formatted += "PM";
+	} 
+	else {
+		formatted += "AM";
+	}
+	
+	return formatted;
+}
 
 $(function () {
   $('.upload').fileUploadUI({

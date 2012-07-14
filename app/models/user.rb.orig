@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_attached_file :photo,
     :styles => {
       :thumb=> "100x100#",
-      :small  => "250x250>" }
+      :small  => "150x150>" }
   
   has_many :authentications
   has_many :notifications
@@ -34,7 +34,19 @@ class User < ActiveRecord::Base
   end
   
   def online?
-  	  self.last_seen > 5.minutes.ago
+<<<<<<< HEAD
+    if self.last_seen != nil
+  	  if (self.last_seen.utc < 5.minutes.ago)
+        return true;
+      else
+        return false;
+      end
+    else
+    	return false;
+    end
+=======
+	self.last_seen > 5.minutes.ago
+>>>>>>> 73107458cbd87c8288c03bbfb479df69aa73cf03
   end
   
   protected

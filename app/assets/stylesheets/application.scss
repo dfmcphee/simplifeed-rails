@@ -42,6 +42,15 @@ html, body { height: 98%; }
   
 }
 
+.chat-input {
+	width: 100%;
+}
+
+.chat-feed {
+	height: 100%;
+	overflow: hidden;
+}
+
 #post {
   height: 270px;
   width: 632px;

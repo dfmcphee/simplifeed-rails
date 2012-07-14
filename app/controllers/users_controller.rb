@@ -18,17 +18,26 @@ class UsersController < ApplicationController
   
   def online_friends
   	@online_friends = []
+  	@unread_messages = Hash.new()
   	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id != ?', current_user.id])
+  	
+  	
+  	
   	
   	@recent_friends.each do | recent_friend |
     	if recent_friend.online?
     		@online_friends.push(recent_friend.id)
     	end
+    	unread_friend_messages = Message.where(:to => current_user.id, :from => recent_friend.id, :read => false)
+    	if !unread_friend_messages.empty?
+    		@unread_messages[recent_friend.id] = unread_friend_messages.size
+    	end
     end
+  	
   	
   	respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: {'recent' => @recent_friends, 'online' => @online_friends } }
+      format.json { render json: {'recent' => @recent_friends, 'online' => @online_friends, :unread => @unread_messages } }
     end
   end
   
@@ -96,8 +105,7 @@ class UsersController < ApplicationController
 	
     redirect_to :action => "show"
   end
-  
-  
+    
   def update_post
 	user = current_user
 	post_id = params[:post_id]
