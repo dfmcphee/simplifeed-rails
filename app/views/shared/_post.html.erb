@@ -135,14 +135,18 @@
 	</div>
 </div>
 
+<% if single_post %>
+<div id="comments-<%= post.id %>" class="collapse in">
+<% else %>
 <div id="comments-<%= post.id %>" class="collapse">
+<% end %>
 	<% comments.each do |comment| %>
 		<div class="row-fluid">
 			<div class="span1">
 				
 			</div>
 			<div class="span11">
-				<%= render "shared/post", :post => comment %>
+				<%= render "shared/post", :post => comment, :single_post => true %>
 			</div>
 		</div>
 	<% end %>

@@ -151,6 +151,9 @@ class UsersController < ApplicationController
 		filter_post(@reply)
 		@alert_style = 'success'
 		flash[:notice] = "Post added to Simplifeed."
+
+		message = current_user.username + " commented on your post. " + view_context.link_to("View", :controller => "posts", :action => "show", :id => @post.id)
+		save_notification(@post.user_id, message, 'info', 'post', @post.id)
 	else
 		@alert_style = 'error'
 		flash[:notice] = "Your post could not be saved."
