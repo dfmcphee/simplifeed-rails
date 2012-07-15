@@ -4,6 +4,7 @@
 // Pusher notifications
 
 $(document).ready(function() {
+	// Update notification and message count in title bar
 	var notification_count = parseInt($('#notification-count').html());
 	var message_count = parseInt($('#message-count').html());
 	
@@ -13,81 +14,90 @@ $(document).ready(function() {
 		document.title = "Simplifeed (" + count + ")";
 	}
 	
+	// Pusher api key
 	var pusher = new Pusher('6a893338845f2e5a617a');
 	var channel = pusher.subscribe('simplifeed');
-	channel.bind(notification_event_id, function(data) {
-		if (data.message) {
-			var notification_count = parseInt($('#notification-count').html());
-			var message_count = parseInt($('#message-count').html());
-			
-			var count = notification_count + message_count;
-			
-			count++;
-			
-			if (count > 0) {
-				document.title = "Simplifeed (" + count + ")";
-			}
-			
-			notification_count++;
-			$('#notification-count').html(notification_count);
-			$('#notifications .empty').remove();
-			$('#notifications').append(data.message);
-			$('#notification-count').addClass('badge-info');
-			
-			var alert_id = 'alert-' + Math.floor(Math.random()*9999999);
-			
-			var html = '<div id="' + alert_id + '" class="span12 alert alert-info">';
-		    html += '<a class="close" data-dismiss="alert" href="#">×</a>';
-		    html += '<p>'
-			html += '<span class="text">' + data.message + '</span></p></div>';
-
-			$('#growl-notifications').append(html);
-			
-			document.title = "Simplifeed (" + count + ")";
-			
-			var timeout = window.setTimeout(function() {
-			    $('#' + alert_id).fadeOut();
-			}, 6000);
-		}
-	});
 	
-	channel.bind(message_event_id, function(data) {
-		if (data.message) {	
-			var notification_count = parseInt($('#notification-count').html());
-			var message_count = parseInt($('#message-count').html());
-			
-			var count = notification_count + message_count;
-			
-			count++;
-			
-			if (count > 0) {
-				document.title = "Simplifeed (" + count + ")";
-			}
-			
-			message_count++;
-			
-			$('#message-count').html(message_count);
-			
-			count = parseInt($('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html());
-			count++;
-			$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html(count);
-			
-			
-			
-			var chat_feed = $('#chat-' + data.friend + ' .chat-feed');
-			
-			var message = '<p>' + data.friend_username + ': ' + data.message + '<span class="pull-right">' + data.time + '</span></p>';
-			
-			chat_feed.append(message);
-
-			$(chat_feed).scrollTop($(chat_feed).height());
-			
-			$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').removeClass('badge-info').addClass('badge-info');
-			
-			$('#message-count').removeClass('badge-info').addClass('badge-info');
-		}
-	});
+	// Pusher event for notifications
+	if (typeof(notification_event_id) !== 'undefined') {
+		channel.bind(notification_event_id, function(data) {
+			if (data.message) {
+				var notification_count = parseInt($('#notification-count').html());
+				var message_count = parseInt($('#message-count').html());
+				
+				var count = notification_count + message_count;
+				
+				count++;
+				
+				if (count > 0) {
+					document.title = "Simplifeed (" + count + ")";
+				}
+				
+				notification_count++;
+				$('#notification-count').html(notification_count);
+				$('#notifications .empty').remove();
+				$('#notifications').append(data.message);
+				$('#notification-count').addClass('badge-info');
+				
+				var alert_id = 'alert-' + Math.floor(Math.random()*9999999);
+				
+				var html = '<div id="' + alert_id + '" class="span12 alert alert-info">';
+			    html += '<a class="close" data-dismiss="alert" href="#">×</a>';
+			    html += '<p>'
+				html += '<span class="text">' + data.message + '</span></p></div>';
 	
+				$('#growl-notifications').append(html);
+				
+				document.title = "Simplifeed (" + count + ")";
+				
+				var timeout = window.setTimeout(function() {
+				    $('#' + alert_id).fadeOut();
+				}, 6000);
+			}
+		});
+	}
+	
+	// Pusher event for messages
+	if (typeof(message_event_id) !== 'undefined')  {
+		channel.bind(message_event_id, function(data) {
+			if (data.message) {	
+				var notification_count = parseInt($('#notification-count').html());
+				var message_count = parseInt($('#message-count').html());
+				
+				var count = notification_count + message_count;
+				
+				count++;
+				
+				if (count > 0) {
+					document.title = "Simplifeed (" + count + ")";
+				}
+				
+				message_count++;
+				
+				$('#message-count').html(message_count);
+				
+				count = parseInt($('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html());
+				count++;
+				$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html(count);
+				
+				
+				
+				var chat_feed = $('#chat-' + data.friend + ' .chat-feed');
+				
+				var message = '<p>' + data.friend_username + ': ' + data.message + '<span class="pull-right">' + data.time + '</span></p>';
+				
+				chat_feed.append(message);
+	
+				$(chat_feed).scrollTop($(chat_feed).height());
+				
+				$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').removeClass('badge-info').addClass('badge-info');
+				
+				$('#message-count').removeClass('badge-info').addClass('badge-info');
+			}
+		});
+	}
+	
+	// Make Enter/Return send message in chat
 	$('.chat-input').keypress(function(e){
 	  if(e.keyCode == 13 && !e.shiftKey) {
 	   e.preventDefault();
@@ -95,6 +105,7 @@ $(document).ready(function() {
 	  }
 	});
 	
+	// Open edit post modal
 	$('.open-edit-post').on('click', function () {
 	  var post_id = $(this).attr('post');
 	  var content = $(this).closest('.post-item').find('.post-content').html();
@@ -102,32 +113,36 @@ $(document).ready(function() {
 	  $('#edit-post #body').val(content);
 	});
 	
+	// Open comment modal
+	$('.open-comment-post').on('click', function () {
+	  var post_id = $(this).attr('post');
+	  $('#reply_to').val(post_id);
+	});
+	
+	// Open confirm delete post modal
 	$('.open-confirm-delete').on('click', function () {
 	  var post_id = $(this).attr('post');
 	  $('#confirm-delete-form').attr('action', '/posts/' + post_id);
 	});
 	
-	var messages_content = '';
-	
-	$('.chat-popover').each(function() {
-		messages_content = $(this).find('.chat-popover-content').html();
-		$(this).popover({content:messages_content});
-	});
-	
+	// Initialize all chat windows as hidden modals without backdrop
 	$('.chat-window').each(function(e){
 		$(this).modal({backdrop:false, show:false});
 	});
 	
+	// Mark all friend messages as read when focus is brought to chat input
 	$('.chat-input').focus( function() {
 		var id = $(this).attr('chat-id');
 		postMessagesAsRead(id);
 	});
 	
+	// Mark all friends messages as read when chat window is opened
 	$('.toggle-chat').live('click', function() {
 		var id = $(this).attr('data-target').split('-')[1];
 		postMessagesAsRead(id);
 	});
 	
+	// Send chat message on chat submit
 	$('.chat-send').on('click', function() {
 		var chat_window = $(this).closest('.chat-window');
 		var chat_input = $(chat_window).find('.chat-input');
@@ -148,6 +163,12 @@ $(document).ready(function() {
 
 	});
 	
+	// Add error class to any form sections with an error in it
+	$('.control-group').has('.field_with_errors').addClass('error');
+	
+	// Make all links to images open in fancy box
+	$("a[href$='.jpg'],a[href$='.jpeg'],a[href$='.png'],a[href$='.gif']").attr('rel', 'gallery').fancybox();
+	
 	
 	setInterval(updateChatList,15000);
 });
@@ -158,6 +179,7 @@ var updateChatList = function() {
 		$("#messages").html('');
 		var friend_count = '';
 		var friend_cell = '';
+		if (data.recent.length > 0) {
 		$.each(data.recent, function(i,friend){
 			if (data.unread[friend.id] != null && parseInt(data.unread[friend.id]) > 0) {
 				friend_count = '<span class="badge badge-info unread-count">' + data.unread[friend.id] + '</span> ';
@@ -166,13 +188,17 @@ var updateChatList = function() {
 				friend_count = '<span class="badge unread-count">0</span> ';
 			}
 			if (($.inArray(friend.id, data.online)) >= 0) {
-				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + ' <span class="label label-info pull-right">Online</span></a></li>';
+				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + ' <span class="label label-info">Online</span></a></li>';
 			}
 			else {
 				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + '</a></li>';
 			}
 		    $("#messages").append(friend_cell);
 		});
+		}
+		else {
+			$("#messages").append('<li class="empty"><a href="#">Nothing to see here</a></li>');
+		}
 	});
 };
 

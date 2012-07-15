@@ -10,7 +10,7 @@
 		<div class="span12 well">
 			<h3>Friend Request Sent</h3>
 			<% @requested_friends.each do |friend| %>
-				<p><%= friend.username %></p>
+				<p><a href="/<%= friend.username %>"><%= friend.username %></a></p>
 			<% end %>
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 			<h3>Incoming Friend Requests</h3>
 			<% @incoming_requests.each do |friend| %>
 				<p>
-					<%= friend.username %>
+					<a href="/<%= friend.username %>"><%= friend.username %></a>
 					<% @friendship = Friendship.find(:first, :conditions => [ "user_id = ? AND friend_id = ?", friend.id, current_user.id]) %>
 					<%= link_to "Approve Friend Request", :controller => "users", :action => "approve_friendship", :friendship_id => @friendship.id  %>
 				</p>
@@ -36,7 +36,7 @@
 		<div class="span12 well">
 			<h3>Friends</h3>
 			<% @friends.each do |friend| %>
-				<p><%= friend.username %></p>
+				<p><a href="/<%= friend.username %>"><%= friend.username %></a></p>
 			<% end %>
 		</div>
 	</div>

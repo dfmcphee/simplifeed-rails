@@ -55,8 +55,8 @@ html, body { height: 98%; }
 	overflow: hidden;
 }
 
-.toggle-chat {
-	width:200px;
+div.field_with_errors {
+	display:inline;
 }
 
 #post {
@@ -82,6 +82,28 @@ html, body { height: 98%; }
 }
 
 #edit-post {
+  height: 270px;
+  width: 632px;
+  
+  textarea {
+    height: 72px;
+    width: 550px;
+    float: left;
+    margin-right: 5px;
+  }
+  
+  ul li {
+    height: 18px;
+    margin-bottom: 2px;
+    
+    input, img {
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+#comment-post {
   height: 270px;
   width: 632px;
   

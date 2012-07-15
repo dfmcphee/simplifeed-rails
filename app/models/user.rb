@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :lastseenable
 
   attr_accessor :login
-
+  
   # Setup accessible (or protected) attributes for your model
   attr_accessible :login, :email, :username, :first_name, :last_name, :password, :password_confirmation, :remember_me, :name, :image_url, :url, :photo
   
@@ -27,7 +27,10 @@ class User < ActiveRecord::Base
   has_many :pending_friends, :through => :friendships, :conditions => "approved = false", :foreign_key => "user_id", :source => :user
   has_many :requested_friendships, :class_name => "Friendship", :foreign_key => "friend_id", :conditions => "approved = false"
   
-  validates_uniqueness_of :username
+  validates :email, :presence => true, :uniqueness => true
+  validates :username, :presence => true, :uniqueness => true
+  validates :password, :confirmation => true
+  validates :password_confirmation, :presence => true, :on => :create
   
   def to_param
     username

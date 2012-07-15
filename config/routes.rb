@@ -1,15 +1,6 @@
 Simplifeed::Application.routes.draw do
-  resources :messages
-
-  resources :uploads
 
   root :to => 'users#show'
-
-  resources :notifications
-
-  resources :friendships
-
-  resources :posts
 
   devise_for :users do
   	get "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
@@ -28,6 +19,9 @@ Simplifeed::Application.routes.draw do
   # Update post content
   match '/user/update_post' => 'users#update_post'
   
+  # Update post content
+  match '/user/reply_to_post' => 'users#reply_to_post'
+  
   # List users, find friends
   match '/friends' => 'users#list'
   
@@ -43,6 +37,9 @@ Simplifeed::Application.routes.draw do
   # Request friendship
   match '/user/request_friendship' => 'users#request_friendship'
   
+  # Unfriend
+  match '/user/unfriend' => 'users#unfriend'
+  
   # Approve friendship
   match '/user/approve_friendship' => 'users#approve_friendship'
   
@@ -52,8 +49,8 @@ Simplifeed::Application.routes.draw do
   # Dismiss notification
   match '/mark_as_read' => 'messages#mark_as_read'
 
-  # Google docs
-  resources :documents
+  # Resources for posts
+  resources :posts
   
   get "/:id", :to => "users#profile", :as => :user
 end

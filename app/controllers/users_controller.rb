@@ -12,17 +12,16 @@ class UsersController < ApplicationController
 
     @users = User.find(:all, :select=>'username').map(&:username)
         
-    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id IN (?)', friends])
+    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id IN (?) AND reply_to = ?', friends, 0])
     @upload  = Upload.new
   end
   
   def online_friends
   	@online_friends = []
   	@unread_messages = Hash.new()
-  	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id != ?', current_user.id])
+  	friends = get_friends()
   	
-  	
-  	
+  	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id IN (?)', friends])
   	
   	@recent_friends.each do | recent_friend |
     	if recent_friend.online?
@@ -135,6 +134,32 @@ class UsersController < ApplicationController
     redirect_to :action => "show"
   end
   
+  def reply_to_post
+	user = current_user
+	post_id = params[:reply_to]
+	content = params[:body]
+	
+	@post = Post.find(post_id)
+	
+	@reply = Post.new
+	@reply.user_id = user.id
+	@reply.content = content
+	@reply.user_thumbnail = current_user.image_url
+	@reply.reply_to = @post.id
+
+	if @reply.save
+		filter_post(@reply)
+		@alert_style = 'success'
+		flash[:notice] = "Post added to Simplifeed."
+	else
+		@alert_style = 'error'
+		flash[:notice] = "Your post could not be saved."
+	end
+	
+    redirect_to :action => "show"
+  end
+  
+  
   def delete_post
 	user = current_user
 	post_id = params[:post_id]
@@ -230,5 +255,37 @@ class UsersController < ApplicationController
 	end
 	redirect_to :action => "list"
   end
+  
+   def unfriend
+  	  if (params[:friend_username] != '')
+	  	@friend = User.find_by_username(params[:friend_username])
+	  	if @friend != nil
+	  		@friendship = Friendship.find(:first, :conditions => [ "user_id = ? AND friend_id = ?", @friend.id, current_user.id])
+	  		if @friendship.nil?
+	  			@friendship = Friendship.find(:first, :conditions => [ "user_id = ? AND friend_id = ?",current_user.id, @friend.id ])
+	  		end
+	  		if @friendship != nil
+			  	@friendship.destroy
+			  	flash[:notice] = "You and " + @friend.username + " are no longer friends."
+			else
+				flash[:notice] = "No friendship was found between you"
+			end
+		else
+			@alert_style = 'error'
+			flash[:notice] = "No friend was found with that username."
+		end
+
+	  else
+	  	@alert_style = 'error'
+	  	flash[:notice] = "You didn't enter a username."
+	  end
+	  redirect_to :action => "list"
+  end
+  
+  def is_friend(user)
+	friends = get_friends
+    return friends.include?(user.id)
+  end
+  
   
 end

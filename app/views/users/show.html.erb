@@ -76,6 +76,22 @@
 	</form>
 </div>
 
+<div id="comment-post" class="modal hide fade">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Comment on Post</h3>
+	</div>
+	<%= form_tag(:action => 'reply_to_post') %>
+		<input type="hidden" value="" id="reply_to" name="reply_to" />
+	    <div class="modal-body">
+	    	<%= text_area_tag :body %>
+		 </div>
+		 <div class="modal-footer">
+		 	<input type="submit" value="Comment" class="btn btn-primary" />
+		 </div>
+	</form>
+</div>
+
 <div id="confirm-delete" class="modal hide fade">
 	<div class="modal-header">
 		<button class="close" data-dismiss="modal">×</button>

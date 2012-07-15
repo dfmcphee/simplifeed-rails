@@ -55,10 +55,25 @@ class ApplicationController < ActionController::Base
 	end
   end
   
+  def get_friends
+  	# People you have befriended
+    friends = current_user.friendships.select { |friend| friend.approved == true }
+    friends = friends.map{|friend| friend.friend_id}
+    
+    # People who befriended you
+    inverse_friends = current_user.inverse_friendships.select { |friend| friend.approved == true }
+    inverse_friends = inverse_friends.map{|friend| friend.user_id}
+    
+    friends = friends + inverse_friends
+    return friends
+  end
+  
   def get_online_friends
   	if user_signed_in?
 	  	@online_friends = []
-	  	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id != ?', current_user.id])
+	  	friends = get_friends()
+  	
+	  	@recent_friends = User.find(:all, :limit => 10, :order => "last_seen DESC", :conditions => ['id IN (?)', friends])
 	  	
 	  	@recent_friends.each do | recent_friend |
 	    	if recent_friend.online?
