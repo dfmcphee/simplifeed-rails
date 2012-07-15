@@ -7,32 +7,44 @@
 	<div class="span3"></div>
 	<div class="span6">
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <fieldset>
+  		<fieldset>
 		    <legend>Sign up</legend>
 			  <div class="control-group">
-			  	<%= f.label :email %>
-			  	<%= f.email_field :email %>
+			  	<div class="input-prepend">
+			  		<span class="add-on"><i class="icon-envelope"></i></span>
+			  		<%= f.email_field :email, :placeholder => "Enter your email address"  %>
+			  	</div>
 			  </div>
 			  
 			  <div class="control-group">
-			  	<%= f.label :username %>
-			  	<%= f.text_field :username %>
+			  	<div class="input-prepend">
+			  		<span class="add-on"><i class="icon-user"></i></span>
+			  		<%= f.text_field :username, :placeholder => "Choose a username"  %>
+			  	</div>
 			  </div>
+		</fieldset>
+
+			  <fieldset>
+				  <legend>Password</legend>
 			
-			  <div class="control-group">
-			  	<%= f.label :password %>
-			  	<%= f.password_field :password %>
-			  </div>
-			  
-			  <div class="control-group">
-			  	<%= f.label :password_confirmation %>
-			  	<%= f.password_field :password_confirmation %>
-			  </div>
+				  <div class="control-group">
+				  	<div class="input-prepend">
+				  		<span class="add-on"><i class="icon-key"></i></span>
+				  		<%= f.password_field :password, :placeholder => "Enter a password" %>
+				  	</div>
+				  </div>
+				  
+				  <div class="control-group">
+				  	<div class="input-prepend">
+				  		<span class="add-on"><i class="icon-key"></i></span>
+				  		<%= f.password_field :password_confirmation, :placeholder => "Confirm your password"  %>
+				  	</div>
+				  </div>
+			  </fieldset>
 			
 			  <div class="form-actions">
 			  	<div><%= f.submit "Sign up", :class =>"btn btn-primary" %></div>
 			  </div>
-	</fieldset>
 <% end %>
 
 <%= render :partial => "devise/shared/links" %>

@@ -95,7 +95,7 @@ class MessagesController < ApplicationController
 	if @message.save
 		@errors = false
 		event_id = 'message-' + @message.to.to_s
-		Pusher['simplifeed'].trigger(event_id, {:message => @message.content, :friend => from, :friend_username => current_user.username, :time => @message.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M %p")})
+		Pusher['simplifeed'].trigger(event_id, {:message => @message.content, :friend => from, :friend_username => current_user.username, :time => @message.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%l:%M %p")})
 	else
 		@errors = 'Error: Could not send message'
 	end

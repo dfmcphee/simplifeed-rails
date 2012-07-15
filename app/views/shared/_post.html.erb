@@ -1,7 +1,7 @@
 <% user = User.find(post.user_id) %>
 <div class="well post-item">
 	<div class="row-fluid">
-	    <div class="span6">
+	    <div class="span6 inline-mobile">
 	    	<p class="lead">
 	    		<a href="/<%= user.username %>">
 	    		<% if user.first_name != nil && user.last_name != nil %>
@@ -12,32 +12,56 @@
 	    		</a>
 	    	</p>
 	    </div>
-	    <div class="span3"></div>
-	    <div class="span3 align-right">
+	    <div class="span3 inline-mobile"></div>
+	    <div class="span3 align-right inline-mobile">
 	    	<abbr class="timeago" title="<%=post.created_at.to_time.iso8601%>"><%=post.created_at.to_time.iso8601%></abbr>
 	    </div>
 	</div>
 	<div class="row-fluid">
-	    <div class="span2">
+	    <div class="span2 inline-mobile">
 	    	<% if user.photo.url(:thumb) %>
 	    	  <%= image_tag(user.photo.url(:thumb)) %>
 	    	<% end %>
 	    </div>
 	    
-	    <div class="post-content span10"><%= raw(auto_link(post.content)) %></div>
+	    <div class="post-content span10 inline-mobile"><%= raw(auto_link(post.content)) %></div>
 	</div>
 	<div class="row-fluid">
 		<div class="span8"></div>
 		<div class="align-right span4">
 	    	<div class="btn-toolbar">
-	        	<div class="btn-group">
-	        		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
-	        		<% if post.user_id === current_user.id %>
-	        		  <% if controller.is_liked(post.id) %>
-	        			<button class="btn"><i class="icon-star"></i> <span class="badge"><%= likes.size %></span></button>
-	        		  <% else %>
-					  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i> <span class="badge"><%= likes.size %></span></a>
-					  <% end %>
+        		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
+        		<% if post.user_id === current_user.id %>
+        		  <% if controller.is_liked(post.id) %>
+        		  <div class="btn-group">
+        			<button class="btn"><i class="icon-star"></i></button>
+        			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        				<span class="badge"><%= likes.size %></span>
+        				<span class="caret"></span>
+        			</a>
+        			<ul class="dropdown-menu">
+				    	<% likes.each do |like| %>
+				    		<% like_user = User.find(like.user_id) %>
+				    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+				    	<% end %>
+				    </ul>
+        		  </div>
+        		  <% else %>
+        		  <div class="btn-group">
+				  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i></a>
+				  	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        				<span class="badge"><%= likes.size %></span>
+        				<span class="caret"></span>
+        			</a>
+        			<ul class="dropdown-menu">
+				    	<% likes.each do |like| %>
+				    		<% like_user = User.find(like.user_id) %>
+				    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+				    	<% end %>
+				    </ul>
+        		  </div>
+				  <% end %>
+				  <div class="btn-group">
 					  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 					    <i class="icon-edit"></i>
 					    <span class="caret"></span>
@@ -46,12 +70,12 @@
 					    <li><a class="open-edit-post" post="<%= post.id %>" data-toggle="modal" href="#edit-post"><i class="icon-edit"></i> Edit</a></li>
 					    <li><a class="open-confirm-delete" post="<%= post.id %>" data-toggle="modal" href="#confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 					  </ul>
-	        		<% elsif controller.is_liked(post.id) %>
-	        			<button class="btn"><i class="icon-star"></i> <span class="badge"><%= likes.size %></span></button>
-	        		<% else %>
-	        			<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i> <span class="badge"><%= likes.size %></span></a>
-	        		<% end %>
-	        	</div>
+				  </div>
+        		<% elsif controller.is_liked(post.id) %>
+        			<button class="btn"><i class="icon-star"></i> <span class="badge"><%= likes.size %></span></button>
+        		<% else %>
+        			<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i> <span class="badge"><%= likes.size %></span></a>
+        		<% end %>
 	    	</div>
 	    </div>
 	</div>

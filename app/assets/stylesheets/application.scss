@@ -42,6 +42,10 @@ html, body { height: 98%; }
   
 }
 
+.inline-mobile {
+	display: inline-block !important;
+}
+
 .chat-input {
 	width: 100%;
 }
@@ -49,6 +53,10 @@ html, body { height: 98%; }
 .chat-feed {
 	height: 100%;
 	overflow: hidden;
+}
+
+.toggle-chat {
+	width:200px;
 }
 
 #post {

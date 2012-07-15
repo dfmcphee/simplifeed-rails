@@ -2,10 +2,12 @@
 <html>
 	<head>
 	  <meta charset="utf-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Simplifeed</title>
 	  <%= csrf_meta_tag %>
 	  <%= stylesheet_link_tag "application", :media => "all" %>
 	  <%= stylesheet_link_tag "http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" %>
+	  <%= stylesheet_link_tag "font-awesome" %>
 	  <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" %>
 	  <%= javascript_include_tag "http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.3/bootstrap.min.js" %>
 	  <script src="/js/jquery.ui.widget.js" type="text/javascript"></script>
@@ -33,7 +35,7 @@
 				  <% if user_signed_in? %>
 				  	<li class="dropdown">
 						    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						          Chat
+						          <i class="icon-comment"></i> Chat
 						          <% unread_messages = Message.where(:to => current_user.id, :read => false) %>
 						          <% if unread_messages != nil && unread_messages.size > 0 %>
 						          	<span id="message-count" class="badge badge-info"><%= unread_messages.size %></span>
@@ -77,7 +79,7 @@
 				  
 					  	<li class="dropdown">
 						    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						          Notifications
+						          <i class="icon-asterisk"></i> Notifications
 						          <% if @notifications.size > 0 %>
 						          	<span id="notification-count" class="badge badge-info"><%= @notifications.size %></span>
 						          <% else %>
@@ -129,7 +131,7 @@
 				  	<div class="chat-feed">
 				     <% chat['messages'].last(10).each do |message| %>
 				     	<% from = User.find(message.from) %>
-				     	<p><%= from.username %>: <%= message.content %> <span class="pull-right"><%= message.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M %p") %></span></p>
+				     	<p><%= from.username %>: <%= message.content %> <span class="pull-right"><%= message.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%l:%M %p") %></span></p>
 				     <% end %>
 				     </div>
 				  </div>

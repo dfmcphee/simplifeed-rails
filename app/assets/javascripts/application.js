@@ -4,13 +4,32 @@
 // Pusher notifications
 
 $(document).ready(function() {
+	var notification_count = parseInt($('#notification-count').html());
+	var message_count = parseInt($('#message-count').html());
+	
+	var count = notification_count + message_count;
+	
+	if (count > 0) {
+		document.title = "Simplifeed (" + count + ")";
+	}
+	
 	var pusher = new Pusher('6a893338845f2e5a617a');
 	var channel = pusher.subscribe('simplifeed');
 	channel.bind(notification_event_id, function(data) {
 		if (data.message) {
-			var count = parseInt($('#notification-count').html());
+			var notification_count = parseInt($('#notification-count').html());
+			var message_count = parseInt($('#message-count').html());
+			
+			var count = notification_count + message_count;
+			
 			count++;
-			$('#notification-count').html(count);
+			
+			if (count > 0) {
+				document.title = "Simplifeed (" + count + ")";
+			}
+			
+			notification_count++;
+			$('#notification-count').html(notification_count);
 			$('#notifications .empty').remove();
 			$('#notifications').append(data.message);
 			$('#notification-count').addClass('badge-info');
@@ -24,6 +43,8 @@ $(document).ready(function() {
 
 			$('#growl-notifications').append(html);
 			
+			document.title = "Simplifeed (" + count + ")";
+			
 			var timeout = window.setTimeout(function() {
 			    $('#' + alert_id).fadeOut();
 			}, 6000);
@@ -31,10 +52,21 @@ $(document).ready(function() {
 	});
 	
 	channel.bind(message_event_id, function(data) {
-		if (data.message) {
-			var count = parseInt($('#message-count').html());
+		if (data.message) {	
+			var notification_count = parseInt($('#notification-count').html());
+			var message_count = parseInt($('#message-count').html());
+			
+			var count = notification_count + message_count;
+			
 			count++;
-			$('#message-count').html(count);
+			
+			if (count > 0) {
+				document.title = "Simplifeed (" + count + ")";
+			}
+			
+			message_count++;
+			
+			$('#message-count').html(message_count);
 			
 			count = parseInt($('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html());
 			count++;
@@ -86,36 +118,14 @@ $(document).ready(function() {
 		$(this).modal({backdrop:false, show:false});
 	});
 	
+	$('.chat-input').focus( function() {
+		var id = $(this).attr('chat-id');
+		postMessagesAsRead(id);
+	});
+	
 	$('.toggle-chat').live('click', function() {
 		var id = $(this).attr('data-target').split('-')[1];
-		
-		$.ajax({ url: '/mark_as_read',
-		  type: 'POST',
-		  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-		  data: { friend_id: id },
-		  success: function(response) {
-			  if (response.success) {
-				  var count = parseInt($('#message-count').html());
-				  
-				  count = count - response.count;
-				  $('#message-count').html(count);
-				  
-				  if (count <= 0) {
-					  $('#message-count').removeClass('badge-info');
-				  }
-				  
-				  var $friend_count = $('a[data-target=#chat-' + id + ']').find('.unread-count');
-				  
-				  count = parseInt($friend_count.html());
-				  count = count - response.count;
-				  $friend_count.html(count);
-				  
-				  if (count <= 0) {
-					  $friend_count.removeClass('badge-info');
-				  }
-			  }
-		  }
-		});
+		postMessagesAsRead(id);
 	});
 	
 	$('.chat-send').on('click', function() {
@@ -165,6 +175,36 @@ var updateChatList = function() {
 		});
 	});
 };
+
+function postMessagesAsRead(id) {
+	$.ajax({ url: '/mark_as_read',
+		  type: 'POST',
+		  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		  data: { friend_id: id },
+		  success: function(response) {
+			  if (response.success) {
+				  var count = parseInt($('#message-count').html());
+				  
+				  count = count - response.count;
+				  $('#message-count').html(count);
+				  
+				  if (count <= 0) {
+					  $('#message-count').removeClass('badge-info');
+				  }
+				  
+				  var $friend_count = $('a[data-target=#chat-' + id + ']').find('.unread-count');
+				  
+				  count = parseInt($friend_count.html());
+				  count = count - response.count;
+				  $friend_count.html(count);
+				  
+				  if (count <= 0) {
+					  $friend_count.removeClass('badge-info');
+				  }
+			  }
+		  }
+		});
+}
 
 function getFormattedTime() {
 	var currentTime = new Date();

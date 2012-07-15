@@ -1,6 +1,6 @@
 <div class="page-header">
 	<%= form_tag(:action => 'request_friendship') %>
-		<input name="friend_username" type="text" autocomplete="off" style="margin: 0 auto;" data-provide="typeahead" data-items="8" data-source='<%= @users.to_json %>'>
+		<input name="friend_username" type="text" autocomplete="off" placeholder="Enter username to search." style="margin: 0 auto;" data-provide="typeahead" data-items="8" data-source='<%= @users.to_json %>'>
 		<input type="submit" value="Send Friend Request" class="btn btn-primary" />
 	</form>
 </div>
