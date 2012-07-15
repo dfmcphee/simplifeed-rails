@@ -13,13 +13,13 @@ Simplifeed::Application.routes.draw do
   # Used for connecting facebook, etc. with an existing username/password account
   match '/connect/:provider' => 'authentications#connect'
 
-  # Twitter, Facebook, and LinkedIn feeds
+  # Add post
   match '/user/post' => 'users#post'
   
   # Update post content
   match '/user/update_post' => 'users#update_post'
   
-  # Update post content
+  # Reply to post
   match '/user/reply_to_post' => 'users#reply_to_post'
   
   # List users, find friends
