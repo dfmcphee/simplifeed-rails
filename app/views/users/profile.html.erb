@@ -59,7 +59,7 @@
 </div>
 
 
-<% if controller.is_friend(@user) %>
+<% if @user.id == current_user.id || controller.is_friend(@user)%>
 
 <div id="simplifeed" class="row-fluid">
 	  <div id="feeds" class="span12">
