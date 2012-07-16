@@ -50,7 +50,7 @@
 				</form>
 			<% else %>
 				<%= form_tag(:action => 'request_friendship') %>
-					<input name="friend_username" type="hidden" />
+					<input name="friend_username" type="hidden" value="<%= @user.username %>" />
 					<input type="submit" value="Send Friend Request" class="btn btn-primary pull-right" />
 				</form>
 			<% end %>
@@ -65,7 +65,7 @@
 	  <div id="feeds" class="span12">
 	  <h2>Recent Posts</h2>
 	  <% @simplifeed.sort {|a, b| a[:created_at] <=> b[:created_at]}.reverse.each do |post| %>
-	  	<%= render "shared/post", :post => post %>
+	  	<%= render "shared/post", :post => post, :single_post => false %>
 	  <% end %>
 	  </div>
 </div>
