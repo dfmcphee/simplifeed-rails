@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.3'
-gem 'rake', '0.9.2'
+gem 'rake', '0.9.2.2'
+gem "bundler", "~> 1.1.4"
 gem 'sqlite3'
 gem "mysql2", "~> 0.3.11"
 gem 'json'
