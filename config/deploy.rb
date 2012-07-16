@@ -1,4 +1,4 @@
-set :application, "tracker"
+set :application, "Simplifeed"
 
 default_run_options[:pty] = true  # Must be set for the password prompt from git to work
 
@@ -11,10 +11,12 @@ set :branch, "master"
 
 set :use_sudo, false
 set :deploy_to, '/var/www/simplifeed'
+set :base_dir, '/var/www/simplifeed/current'
 set :user, 'dom'
 set :password, 'TheOnly1'
 
 server "199.192.229.170", :app, :web, :db, :primary => true
+
 
 namespace :deploy do
   task :start do
@@ -31,11 +33,9 @@ namespace :deploy do
     run "touch /var/www/simplifeed/current/tmp/restart.txt"
   end
   
-  namespace :assets do
-        task :precompile, :roles => :web, :except => { :no_release => true } do
+  task :precompile, :roles => :web, :except => { :no_release => true } do
           from = source.next_revision(current_revision)
-          run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} assets:precompile}
-        end
+          run "cd #{latest_release} && rake assets:precompile"
    end
 end
 
