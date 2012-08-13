@@ -35,7 +35,7 @@ namespace :deploy do
     run "touch /var/www/simplifeed/current/tmp/restart.txt"
   end
   
-  after "deploy:update" do
-    run "cd #{base_dir} #{rake_cmd} assets:precompile"
+  task :precompile, :roles => :web do
+    run "cd #{base_dir} RAILS_ENV=production #{rake_cmd} assets:precompile"
   end
 end
