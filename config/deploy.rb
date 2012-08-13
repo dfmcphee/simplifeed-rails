@@ -12,12 +12,12 @@ set :branch, "master"
 set :use_sudo, false
 set :deploy_to, '/var/www/simplifeed'
 set :base_dir, '/var/www/simplifeed/current'
-set :user, 'dom'
-set :password, 'TheOnly1'
+set :user, ''
+set :password, ''
 
 rake_cmd = fetch(:rake)
 
-server "199.192.229.170", :app, :web, :db, :primary => true
+server "", :app, :web, :db, :primary => true
 
 
 namespace :deploy do
