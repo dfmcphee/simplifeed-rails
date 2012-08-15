@@ -1,0 +1,53 @@
+@import "compass/css3";
+
+p.who {
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+  min-height: 16px;
+  padding-left: 20px;
+  
+  &.twitter {
+    background-image: url('/images/buttons/twitter_16.png');
+  }
+
+  &.facebook {
+    background-image: url('/images/buttons/facebook_16.png');
+  }
+
+  &.linkedin {
+    background-image: url('/images/buttons/linkedin_16.png');
+  }
+}
+
+/* http://blog.mollar.me/coding/making-a-cool-blockquote-with-css/ */
+blockquote {
+	background-color: rgb(204, 204, 204); /* default background */
+
+	@include border-radius(10px);
+  @include background-image(linear-gradient(color-stops(rgb(240, 240, 240), rgb(204, 204, 204))));
+
+	margin: 20px 0;
+	padding: 20px;
+	position: relative;
+}
+
+blockquote:after {
+	content: "\00a0";
+	display: block; /* FF 3.0 */
+	bottom: -30px;
+	left: 50px;
+	width: 0;
+	height: 0;
+	position: absolute;
+
+	border-width: 15px 15px;
+	border-style: solid;
+	border-color: rgb(204, 204, 204) transparent transparent;
+}
+
+blockquote + p {
+	color: rgb(200, 180, 180);
+	font-size: .857em; /* 12px */
+	font-style: italic;
+	margin: 0 0 0 50px;
+}

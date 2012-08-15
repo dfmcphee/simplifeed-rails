@@ -1,0 +1,74 @@
+<div class="row-fluid">
+	<div class="span12">
+		<h2>Edit <%= resource_name.to_s.humanize %></h2>
+		
+		<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :multipart => true }) do |f| %>
+	</div>
+	<% if !devise_error_messages!.empty? %>
+	    <div class="row-fluid flash">
+	    	<div class="alert alert-error span12"><%= devise_error_messages! %></div>
+	    </div>
+	<% end %>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+	  <div class="control-group">
+	  	<%= f.label :email %>
+	  	<%= f.email_field :email %>
+	  </div>
+	  
+	  <div class="control-group">
+	  	<%= f.label :username %>
+	  	<%= f.text_field :username %>
+	  </div>
+	  
+	  <div class="control-group">
+	  	<%= f.label :first_name %>
+	  	<%= f.text_field :first_name %>
+	  </div>
+	  
+	  <div class="control-group">
+	  	<%= f.label :last_name %>
+	  	<%= f.text_field :last_name %>
+	  </div>
+	  
+	  <h3>Profile Picture</h3>
+	  <div class="control-group">
+	   <%= image_tag(@user.photo.url(:thumb)) %>
+	   <%= f.file_field :photo %>
+	  </div>
+	</div>
+	<div class="span6">
+	  <div class="control-group">
+	  	<%= f.label :password %> (leave blank if you don't want to change it)
+	  </div>
+	  <div class="control-group">
+	  	<%= f.password_field :password, :autocomplete => "off" %>
+	  </div>
+	
+	  <div class="control-group">
+	  	<%= f.label :password_confirmation %>
+	  	<%= f.password_field :password_confirmation %>
+	  </div>
+	
+	  <div class="control-group">
+	  	<%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i>
+	  </div>
+	  <div class="control-group">
+	  	<%= f.password_field :current_password %>
+	  </div>
+	
+	  <div><%= f.submit "Update" %></div>
+	<% end %>
+	</div>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<h3>Cancel my account</h3>
+		
+		<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
+		
+		<%= link_to "Back", :back %>
+	</div>
+</div>

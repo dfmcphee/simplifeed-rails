@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @friendship.user_id %>
+</p>
+
+<p>
+  <b>Friend:</b>
+  <%= @friendship.friend_id %>
+</p>
+
+<p>
+  <b>Create:</b>
+  <%= @friendship.create %>
+</p>
+
+<p>
+  <b>Destroy:</b>
+  <%= @friendship.destroy %>
+</p>
+
+
+<%= link_to 'Edit', edit_friendship_path(@friendship) %> |
+<%= link_to 'Back', friendships_path %>

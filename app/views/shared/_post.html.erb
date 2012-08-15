@@ -1,0 +1,153 @@
+<% user = User.find(post.user_id) %>
+<% comments = Post.where(:reply_to => post.id) %>
+
+<div class="well post-item">
+	<div class="row-fluid">
+	    <div class="span6 inline-mobile">
+	    	<p class="lead">
+	    		<a href="/<%= user.username %>">
+	    		<% if user.first_name != nil && user.last_name != nil %>
+	    			<%= user.first_name %> <%= user.last_name %>
+	    		<% else %>
+	    			<%= user.username %>
+	    		<% end %>
+	    		</a>
+	    	</p>
+	    </div>
+	    <div class="span3 inline-mobile"></div>
+	    <div class="span3 align-right inline-mobile">
+	    	<abbr class="timeago" title="<%=post.created_at.to_time.iso8601%>"><%=post.created_at.to_time.iso8601%></abbr>
+	    </div>
+	</div>
+	<div class="row-fluid">
+	    <div class="span2 inline-mobile">
+	    	<% if user.photo.url(:thumb) %>
+	    	  <%= image_tag(user.photo.url(:thumb)) %>
+	    	<% end %>
+	    </div>
+	    <% 
+		    
+		    content = post.content.gsub(/(?<!\w)@\w+/, '<a href="\0">\0</a>')
+		    
+		    content = content.gsub('<a href="@', '<a href="')
+		    
+	    %>
+	    <div class="post-content span10 inline-mobile"><%= raw(auto_link(content)) %></div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6"></div>
+		<div class="align-right span6">
+	    	<div class="btn-toolbar">
+        		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
+        		<div class="btn-group">
+        			<a class="btn open-comment-post" post="<%= post.id %>" data-toggle="modal" href="#comment-post"><i class="icon-comment"></i></a>
+        			<% if !comments.empty? %>
+				     <a class="btn" data-toggle="collapse" data-target="#comments-<%= post.id %>">
+        				<span class="badge"><%= comments.size %></span>
+        				<span class="caret"></span>
+        			  </a>
+        			<% else %>
+				  	 <a class="btn href="#">
+        				<span class="badge"><%= comments.size %></span>
+        			  </a>
+        			<% end %>
+        		</div>
+
+        		<% if post.user_id === current_user.id %>
+	        		  <% if controller.is_liked(post.id) %>
+	        		  <div class="btn-group">
+	        			<button class="btn"><i class="icon-star"></i></button>
+	        		  <% else %>
+	        		  <div class="btn-group">
+					  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i></a>
+					  <% end %>
+					  <% if !likes.empty? %>
+					     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+	        				<span class="badge"><%= likes.size %></span>
+	        				<span class="caret"></span>
+	        			  </a>
+						  <ul class="dropdown-menu">
+						    	<% likes.each do |like| %>
+						    		<% like_user = User.find(like.user_id) %>
+						    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+						    	<% end %>
+						  </ul>
+					  <% else %>
+					  	 <a class="btn href="#">
+	        				<span class="badge"><%= likes.size %></span>
+	        			  </a>
+					  <% end %>
+					  </div>
+					  <div class="btn-group">
+						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						    <i class="icon-edit"></i>
+						    <span class="caret"></span>
+						  </a>
+						  <ul class="dropdown-menu">
+						    <li><a class="open-edit-post" post="<%= post.id %>" data-toggle="modal" href="#edit-post"><i class="icon-edit"></i> Edit</a></li>
+						    <li><a class="open-confirm-delete" post="<%= post.id %>" data-toggle="modal" href="#confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+						  </ul>
+					  </div>
+				<% elsif controller.is_liked(post.id) %>
+	        		<div class="btn-group">
+	        			<button class="btn"><i class="icon-star"></i></button>
+	        			<% if !likes.empty? %>
+					     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+	        				<span class="badge"><%= likes.size %></span>
+	        				<span class="caret"></span>
+	        			  </a>
+						  <ul class="dropdown-menu">
+						    	<% likes.each do |like| %>
+						    		<% like_user = User.find(like.user_id) %>
+						    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+						    	<% end %>
+						  </ul>
+					  </div>
+					  <% else %>
+					  	 <a class="btn href="#">
+	        				<span class="badge"><%= likes.size %></span>
+	        			  </a>
+					  <% end %>
+
+        		<% else %>
+           		<div class="btn-group">
+        			<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i></a>
+        		 <% if !likes.empty? %>
+				     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        				<span class="badge"><%= likes.size %></span>
+        				<span class="caret"></span>
+        			  </a>
+					  <ul class="dropdown-menu">
+					    	<% likes.each do |like| %>
+					    		<% like_user = User.find(like.user_id) %>
+					    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+					    	<% end %>
+					  </ul>
+				  <% else %>
+				  	 <a class="btn href="#">
+        				<span class="badge"><%= likes.size %></span>
+        			  </a>
+				  <% end %>
+        		</div>
+        		<% end %>
+	    	</div>
+	    </div>
+	</div>
+</div>
+
+<% if single_post %>
+<div id="comments-<%= post.id %>" class="collapse in">
+<% else %>
+<div id="comments-<%= post.id %>" class="collapse">
+<% end %>
+	<% comments.each do |comment| %>
+		<div class="row-fluid">
+			<div class="span1">
+				
+			</div>
+			<div class="span11">
+				<%= render "shared/post", :post => comment, :single_post => true %>
+			</div>
+		</div>
+	<% end %>
+</div>
