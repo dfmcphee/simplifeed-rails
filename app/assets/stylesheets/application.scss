@@ -1,12 +1,9 @@
 @import "compass/reset";
 @import "compass/layout";
 
-@import "bootstrap";
-
 @import "partials/base";
 @import "partials/page";
 @import "partials/blockquote";
- 
 
 // Force a short page to keep the sticky footer from running off the bottom
 html, body { height: 98%; }
@@ -197,10 +194,22 @@ div.field_with_errors {
   display: block;
 }
 
-/* Fix for IE 6: */
-*html .fileinput-button {
-  line-height: 22px;
-  margin: 1px -3px 0 0;
+.big-icon {
+	line-height: 110px;
+	font-size: 110px;
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.move-down {
+	margin-top: 30px;
+}
+
+.overflowing {
+	overflow: visible !important;
 }
 
 /* Fix for IE 7: */

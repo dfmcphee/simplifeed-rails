@@ -105,6 +105,14 @@ $(document).ready(function() {
 	  }
 	});
 	
+	$('.collapse').on('shown', function () {
+  		$(this).addClass('overflowing');
+  	});
+  	
+  	$('.collapse').on('hide', function () {
+	  	$(this).removeClass('overflowing');
+  	});
+	
 	// Open edit post modal
 	$('.open-edit-post').on('click', function () {
 	  var post_id = $(this).attr('post');
