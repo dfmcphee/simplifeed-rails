@@ -3,19 +3,19 @@
 p.who {
   background-repeat: no-repeat;
   background-position: 0% 50%;
-  min-height: 16px;
-  padding-left: 20px;
+  min-height: 32px;
+  padding-left: 42px;
   
   &.twitter {
-    background-image: url('/images/buttons/twitter_16.png');
+    background-image: url('/images/buttons/twitter_32.png');
   }
 
   &.facebook {
-    background-image: url('/images/buttons/facebook_16.png');
+    background-image: url('/images/buttons/facebook_32.png');
   }
 
   &.linkedin {
-    background-image: url('/images/buttons/linkedin_16.png');
+    background-image: url('/images/buttons/linkedin_32.png');
   }
 }
 

@@ -17,11 +17,7 @@ Rails 3.2.3
 Getting Started
 ---------------
 
-First add all your network api keys in config/oauth.yml
-
-Edit your config/database.yml with your database authentication
-
-To install all the gems necessary enter in the command line:
+This is a full running rails project. To install all the gems necessary enter in the command line:
 `bundle install`
 
 To create your database run:
@@ -32,9 +28,3 @@ To run all the database migrations run:
 
 Then start the web stack with:
 `rails server`
-
-If you want to use capistrano to deploy to your server through ssh for you, do the following:
-
-1. Edit your config/deploy.rb and enter your server information
-2. Use `cap deploy:setup` to create the directories on your server
-3. Use `cap deploy:update` to deploy new code
