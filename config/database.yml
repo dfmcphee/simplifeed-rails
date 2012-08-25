@@ -26,6 +26,6 @@ production:
   encoding: utf8
   database: simplifeed
   pool: 5
-  username: 
-  password: 
+  username: root
+  password: Onyx1234
   socket: /var/run/mysqld/mysqld.sock

@@ -12,8 +12,8 @@ set :branch, "master"
 set :use_sudo, false
 set :deploy_to, '/var/www/simplifeed'
 set :base_dir, '/var/www/simplifeed/current'
-set :user, ''
-set :password, ''
+set :user, 'dom'
+set :password, 'TheOnly1'
 
 rake_cmd = fetch(:rake)
 
