@@ -4,7 +4,7 @@ Welcome to Simplifeed
 About
 -----
 
-Simplifeed combines your social networks into a simple stream. It is based on RESTful principles and lets users request their feeds through its web services. It allows users to sort through lists of sources from their networks and group them into lists they can share. They also have the ability to star any of their favourite posts to create their own simplifeed that can be shared.
+Simplifeed is a free open source social network based on privacy with developers in mind.
 
 Requirements
 ------------
