@@ -7,7 +7,7 @@ set :scm_username, 'dfmcphee'
 set :scm_verbose, true
 set :git_shallow_clone, 1
 set :repository, "git@bitbucket.org:#{scm_username}/simplifeed.git"
-set :branch, "master"
+set :branch, "bb-master"
 
 set :use_sudo, false
 set :deploy_to, '/var/www/simplifeed'
@@ -17,7 +17,7 @@ set :password, 'TheOnly1'
 
 rake_cmd = fetch(:rake)
 
-server "", :app, :web, :db, :primary => true
+server "199.192.229.170", :app, :web, :db, :primary => true
 
 
 namespace :deploy do
