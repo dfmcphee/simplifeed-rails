@@ -57,6 +57,14 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(params[:post])
    
+    @links = @post.content.split(/\s+/).find_all { |u| u =~ /^https?:/ }
+    if !@links.empty?
+    	@links.each do |link|
+    		short_link = "simplifeed.me/" + (0...8).map{65.+(rand(25)).chr}.join
+    		@post.content.gsub(link, short_link)
+    	end
+    end
+    logger.info("bla: #{@links}")
     respond_to do |format|
       if @post.save
         format.html { redirect_to @post, notice: 'Post was successfully created.' }

@@ -14,6 +14,11 @@ class UsersController < ApplicationController
         
     @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id IN (?) AND reply_to = ?', friends, 0])
     @upload  = Upload.new
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'feed' => @simplifeed} }
+    end
   end
   
   def online_friends
