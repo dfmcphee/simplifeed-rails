@@ -1,16 +1,19 @@
 Simplifeed::Application.routes.draw do
 
+  resources :links
+
   root :to => 'home#index'
 
   match '/feed' => 'users#show'
 
   devise_for :users do
     get "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
+    match '/users/show' => 'users#show'
   end
   
   namespace :api do
-    namespace :v1 do
-      match '/auth/failure' => 'tokens#failure'
+    namespace :v1  do
+      resources :tokens,:only => [:create, :destroy]
     end
   end
 
@@ -61,4 +64,8 @@ Simplifeed::Application.routes.draw do
   resources :posts
   
   get "/:id", :to => "users#profile", :as => :user
+  
+  resources :links do
+    match ':in_url' => 'links#go' #added this line
+  end
 end

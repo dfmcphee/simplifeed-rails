@@ -32,7 +32,13 @@
 		    content = content.gsub('<a href="@', '<a href="')
 		    
 	    %>
-	    <div class="post-content span10 inline-mobile"><%= raw(auto_link(content)) %></div>
+	    <% 
+		    
+		    content = auto_link(content, :all) do |text|
+			    truncate(text, :length => 24)
+			end
+	    %>
+	    <div class="post-content span10 inline-mobile"><%= raw(content) %></div>
 	</div>
 	<div class="row-fluid">
 		<div class="span6"></div>
