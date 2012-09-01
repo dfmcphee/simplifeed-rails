@@ -1,0 +1,107 @@
+<% if @simplifeed.empty? && active === 'feed' %>
+	<div class="row-fluid">
+		<div class="span12 hero-unit">
+			<h2>Welcome to Simplifeed.</h2>
+			<h3>To get started, add some friends.</h3>
+			<%= form_tag(:action => 'request_friendship') %>
+				<input name="friend_username" type="text" placeholder="Enter username to search." class="" style="margin: 0 auto;" autocomplete="off" data-provide="typeahead" data-items="8" data-source='<%= @users.to_json %>'>
+				<input type="submit" value="Send Friend Request" class="btn btn-primary" />
+			</form>
+		</div>
+	</div>
+<% end %>
+
+<a class="btn btn-info" data-toggle="modal" href="#add-provider">
+	<i class="icon-user icon-white"></i> Connect Account
+</a>
+
+<a class="btn btn-inverse pull-right" data-toggle="modal" href="#post">
+	<i class="icon-plus icon-white"></i> Add Post
+</a>
+
+<div id="add-provider" class="modal hide fade">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Connect account to Simplifeed</h3>
+	</div>
+	<div class="modal-body">
+		  <ul id="login">
+		    <% @providers.each do |provider| %>
+		      <% if ! @authorized_providers.include?(provider) %>
+		        <li><a href="/auth/<%=provider%>" class="<%=provider%>"></a></li>
+		      <% end %>
+		    <% end %>
+		  </ul>
+	</div>
+</div>
+
+<div id="post" class="modal hide fade">
+		<div class="modal-header">
+			<button class="close" data-dismiss="modal">×</button>
+			<h3>Add Post</h3>
+		</div>
+		<%= form_tag(:controller => 'users', :action => 'post') %>
+		    <div class="modal-body">
+		    	<%= text_area_tag :body %>		      
+				<ul id="post-providers">
+			        <% @providers.each do |provider| %>
+			          <% if @authorized_providers.include?(provider) %>
+				          <li>
+				           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
+				            <img src="/images/buttons/<%=provider%>_16.png" />
+				          </li>
+			          <% end %>
+			        <% end %>
+			    </ul>
+			 </div>
+			 <div class="modal-footer">
+			 	<input type="submit" value="Post" class="btn btn-primary" />
+			 </div>
+		</form>
+	</div>
+
+
+<div id="simplifeed" class="row-fluid">
+	<div class="span4 well">
+		<ul class="side-menu nav nav-pills nav-stacked">
+		  <% if active === 'feed' %>
+		  	<li class="active"><a href="/feed"><i class="icon-cloud"></i> Feed</a></li>
+		  <% else %>
+		  	<li><a href="/feed"><i class="icon-cloud"></i> Feed</a></li>
+		  <% end %>
+		  <% if active === 'mentions' %>
+		  	 <li class="active"><a href="/mentions"><i class="icon-bullhorn"></i> Mentions</a></li>
+		  <% else %>
+		  	 <li><a href="/mentions"><i class="icon-bullhorn"></i> Mentions</a></li>
+		  <% end %>
+		  <% if active === 'favs' %>
+		  	<li class="active"><a href="/favs"><i class="icon-heart"></i> Favs</a></li>
+		  <% else %>
+		  	<li><a href="/favs"><i class="icon-heart"></i> Favs</a></li>
+		  <% end %>
+		  <% if active === 'profile' %>
+		  	<li class="active"><a href="/<%= current_user.username %>"><i class="icon-user"></i> My Profile</a></li>
+		  <% else %>
+		  	<li><a href="/<%= current_user.username %>"><i class="icon-user"></i> My Profile</a></li>
+		  <% end %>
+		  <li><a href="/friends"><i class="icon-group"></i> Add Friends</a></li>
+		</ul>
+	</div>
+	<div id="feeds" class="span8">
+	  <% if @simplifeed.empty? %>
+	  	<div class="well post-item">
+		  	<div class="row-fluid">
+		  		<div class="span12">
+		  			<p class="lead">Nothing yet.</p>
+		  		</div>
+		  	</div>
+	  	</div>
+	  <% else %>
+		  <% @simplifeed.sort {|a, b| a[:created_at] <=> b[:created_at]}.reverse.each do |post| %>
+		  	
+		  	<%= render "shared/post", :post => post, :single_post => false %>
+		  	
+		  <% end %>
+	  <% end %>
+	</div>
+</div>

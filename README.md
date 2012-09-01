@@ -1,6 +1,8 @@
 Welcome to Simplifeed
 =====================
 
+Version: 0.0.5
+
 About
 -----
 

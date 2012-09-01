@@ -48,8 +48,23 @@ class UsersController < ApplicationController
   # Get user profile
   def profile
   	@user = User.find_by_username(params[:id])
+  	
+  	if @user.id === current_user.id
+		@active = 'profile'
+	else
+		@active = 'other'
+	end
+  	
+  	@providers = %w(facebook twitter)
+    if current_user
+    	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
+    end
+    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
+
+    @users = User.find(:all, :select=>'username').map(&:username)
   	        
-    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id = ?', @user.id])
+    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id = ? AND reply_to = ?', @user.id, 0])
   end
   
   def list
@@ -156,9 +171,11 @@ class UsersController < ApplicationController
 		filter_post(@reply)
 		@alert_style = 'success'
 		flash[:notice] = "Post added to Simplifeed."
-
-		message = current_user.username + " commented on your post. " + view_context.link_to("View", :controller => "posts", :action => "show", :id => @post.id)
-		save_notification(@post.user_id, message, 'info', 'post', @post.id)
+		
+		if @post.user_id != current_user.id
+			message = current_user.username + " commented on your post. " + view_context.link_to("View", :controller => "posts", :action => "show", :id => @post.id)
+			save_notification(@post.user_id, message, 'info', 'post', @post.id)
+		end
 	else
 		@alert_style = 'error'
 		flash[:notice] = "Your post could not be saved."
