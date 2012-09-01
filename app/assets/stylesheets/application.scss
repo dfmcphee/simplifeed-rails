@@ -52,6 +52,16 @@ html, body { height: 98%; }
 	overflow: hidden;
 }
 
+.side-menu.nav-pills > li > a {
+	font-size: 1.2em;
+	line-height: 1.1em;
+	color: #3b3b3b;
+}
+
+.side-menu.nav-pills > li.active > a {
+	color: #FFF;
+}
+
 div.field_with_errors {
 	display:inline;
 }

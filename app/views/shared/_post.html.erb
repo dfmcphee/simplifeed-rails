@@ -14,8 +14,7 @@
 	    		</a>
 	    	</p>
 	    </div>
-	    <div class="span3 inline-mobile"></div>
-	    <div class="span3 align-right inline-mobile">
+	    <div class="span6 pull-right align-right inline-mobile">
 	    	<abbr class="timeago" title="<%=post.created_at.to_time.iso8601%>"><%=post.created_at.to_time.iso8601%></abbr>
 	    </div>
 	</div>
@@ -41,8 +40,8 @@
 	    <div class="post-content span10 inline-mobile"><%= raw(content) %></div>
 	</div>
 	<div class="row-fluid">
-		<div class="span6"></div>
-		<div class="align-right span6">
+		<div class="span2"></div>
+		<div class="align-right span10">
 	    	<div class="btn-toolbar">
         		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
         		<div class="btn-group">
@@ -62,10 +61,10 @@
         		<% if post.user_id === current_user.id %>
 	        		  <% if controller.is_liked(post.id) %>
 	        		  <div class="btn-group">
-	        			<button class="btn"><i class="icon-star"></i></button>
+	        			<button class="btn"><i class="icon-heart"></i></button>
 	        		  <% else %>
 	        		  <div class="btn-group">
-					  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i></a>
+					  	<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-heart-empty"></i></a>
 					  <% end %>
 					  <% if !likes.empty? %>
 					     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -75,7 +74,11 @@
 						  <ul class="dropdown-menu">
 						    	<% likes.each do |like| %>
 						    		<% like_user = User.find(like.user_id) %>
-						    		<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+						    		<% if like_user === current_user %>
+						    			<li><a href="#">You liked this.</a></li>
+						    		<% else %>
+						    			<li><a href="#"><%= like_user.username  %> liked this.</a></li>
+						    		<% end %>
 						    	<% end %>
 						  </ul>
 					  <% else %>
@@ -96,7 +99,7 @@
 					  </div>
 				<% elsif controller.is_liked(post.id) %>
 	        		<div class="btn-group">
-	        			<button class="btn"><i class="icon-star"></i></button>
+	        			<button class="btn"><i class="icon-heart"></i></button>
 	        			<% if !likes.empty? %>
 					     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 	        				<span class="badge"><%= likes.size %></span>
@@ -117,7 +120,7 @@
 
         		<% else %>
            		<div class="btn-group">
-        			<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-star-empty"></i></a>
+        			<a href="/like_post?post_id=<%= post.id %>" class="btn"><i class="icon-heart-empty"></i></a>
         		 <% if !likes.empty? %>
 				     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
         				<span class="badge"><%= likes.size %></span>

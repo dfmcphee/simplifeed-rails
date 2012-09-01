@@ -32,6 +32,39 @@ class PostsController < ApplicationController
     end
   end
 
+  def mentions
+  	 @providers = %w(facebook twitter)
+    if current_user
+    	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
+    end
+    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
+    
+    @mentions = current_user.mentions.map(&:post_id)
+    @simplifeed = Post.where(:id => @mentions)
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'feed' => @simplifeed} }
+    end
+  end
+  
+  def favs
+  	@providers = %w(facebook twitter)
+    if current_user
+    	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
+    end
+    @users = User.find(:all, :select=>'username').map(&:username)
+    friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
+    likes = Like.where(:user_id => current_user.id).map(&:post_id)
+    @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['id IN (?)', likes])
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'feed' => @simplifeed} }
+    end
+  end
+
   # GET /posts/new
   # GET /posts/new.json
   def new
@@ -58,13 +91,7 @@ class PostsController < ApplicationController
     @post = Post.new(params[:post])
    
     @links = @post.content.split(/\s+/).find_all { |u| u =~ /^https?:/ }
-    if !@links.empty?
-    	@links.each do |link|
-    		short_link = "simplifeed.me/" + (0...8).map{65.+(rand(25)).chr}.join
-    		@post.content.gsub(link, short_link)
-    	end
-    end
-    logger.info("bla: #{@links}")
+
     respond_to do |format|
       if @post.save
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
@@ -121,10 +148,12 @@ class PostsController < ApplicationController
   			@like.save
   			
   			# Notify owner of post about like
-  			user = User.find(@post.user_id)
-  			message = current_user.username + " liked your post. " + view_context.link_to("View", :controller => "posts", :action => "show", :id => @post.id) + " "
-
-  			save_notification(user.id, message, 'info', 'post', @post.id)
+  			if @post.user != current_user
+	  			user = User.find(@post.user_id)
+	  			message = current_user.username + " liked your post. " + view_context.link_to("View", :controller => "posts", :action => "show", :id => @post.id) + " "
+	
+	  			save_notification(user.id, message, 'info', 'post', @post.id)
+  			end
   		end
   	end
   	redirect_to :controller => "users", :action => "show"

@@ -48,6 +48,8 @@
 					<input name="friend_username" type="hidden" value="<%= @user.username %>"/>
 					<input type="submit" value="Unfriend" class="btn btn-danger pull-right" />
 				</form>
+			<% elsif @user === current_user %>
+					<a href="/users/edit" class="btn btn-primary pull-right">Edit Profile</a>
 			<% else %>
 				<%= form_tag(:action => 'request_friendship') %>
 					<input name="friend_username" type="hidden" value="<%= @user.username %>" />
@@ -58,16 +60,8 @@
 	</div>
 </div>
 
+<% if @user.id === current_user.id || controller.is_friend(@user)%>
 
-<% if @user.id == current_user.id || controller.is_friend(@user)%>
-
-<div id="simplifeed" class="row-fluid">
-	  <div id="feeds" class="span12">
-	  <h2>Recent Posts</h2>
-	  <% @simplifeed.sort {|a, b| a[:created_at] <=> b[:created_at]}.reverse.each do |post| %>
-	  	<%= render "shared/post", :post => post, :single_post => false %>
-	  <% end %>
-	  </div>
-</div>
+	<%= render "shared/feed", :simplifeed => @simplifeed, :active => @active %>
 
 <% end %>

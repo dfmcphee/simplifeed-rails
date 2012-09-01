@@ -20,15 +20,20 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :posts
   has_many :likes
+  has_many :mentions
 
   has_many :friendships
-  has_many :friends, :through => :friendships
+  has_many :friends, :through => :friendships,  :conditions => ['friendships.approved = ?',true]
   has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
-  has_many :inverse_friends, :through => :inverse_friendships, :source => :user
+  has_many :inverse_friends, :through => :inverse_friendships, :source => :user, :conditions => ['friendships.approved = ?',true]
   has_many :pending_friends, :through => :friendships, :conditions => "approved = false", :foreign_key => "user_id", :source => :user
   has_many :requested_friendships, :class_name => "Friendship", :foreign_key => "friend_id", :conditions => "approved = false"
   
-  validates :email, :presence => true, :uniqueness => true
+  validates :email, :presence => true, 
+  					:uniqueness => true,
+  					:length => {:minimum => 3, :maximum => 254},
+                    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
+                    
   validates :username, :presence => true, :uniqueness => true
   validates :password, :confirmation => true
   validates :password_confirmation, :presence => true, :on => :create

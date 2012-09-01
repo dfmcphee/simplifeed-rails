@@ -107,10 +107,12 @@ $(document).ready(function() {
 	
 	$('.collapse').on('shown', function () {
   		$(this).addClass('overflowing');
+  		$(this).find('.collapse').addClass('overflowing');
   	});
   	
   	$('.collapse').on('hide', function () {
 	  	$(this).removeClass('overflowing');
+	  	$(this).find('.collapse').removeClass('overflowing');
   	});
 	
 	// Open edit post modal
@@ -178,7 +180,7 @@ $(document).ready(function() {
 	$("a[href$='.jpg'],a[href$='.jpeg'],a[href$='.png'],a[href$='.gif']").attr('rel', 'gallery').fancybox();
 	
 	
-	setInterval(updateChatList,15000);
+	setInterval(updateChatList,25000);
 });
 
 var updateChatList = function() {

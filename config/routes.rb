@@ -3,9 +3,16 @@ Simplifeed::Application.routes.draw do
   resources :links
 
   root :to => 'home#index'
-
+  
+  # Main feed
   match '/feed' => 'users#show'
-
+  
+  # Mentions
+  match '/mentions' => 'posts#mentions'
+  
+  # Favs
+  match '/favs' => 'posts#favs'
+  
   devise_for :users do
     get "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
     match '/users/show' => 'users#show'

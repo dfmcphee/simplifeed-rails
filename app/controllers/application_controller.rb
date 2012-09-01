@@ -21,6 +21,11 @@ class ApplicationController < ActionController::Base
   		username = mention[1].gsub('@', '')
   		mentioned_user = User.find(:first, :conditions => [ "username = ?", username])
   		if mentioned_user != nil
+  			mention = Mention.new
+  			mention.user = mentioned_user
+  			mention.post = post
+  			mention.save!
+  			
   			message = current_user.username + " mentioned you. " + 
 	view_context.link_to("View", :controller => "posts", :action => "show", :id => post.id)
 			save_notification(mentioned_user.id, message, 'info', 'post', post.id)
