@@ -22,7 +22,7 @@ class AuthenticationsController < ApplicationController
   # in and the authentication gets associated with the logged-in user
   def connect
     session[:oauth_return] ||= request.referer
-    redirect_to("/auth/#{params[:provider]}")
+    redirect_to("/users/auth/#{params[:provider]}")
   end
   
   def failure

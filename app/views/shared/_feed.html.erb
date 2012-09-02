@@ -28,7 +28,7 @@
 		  <ul id="login">
 		    <% @providers.each do |provider| %>
 		      <% if ! @authorized_providers.include?(provider) %>
-		        <li><a href="/auth/<%=provider%>" class="<%=provider%>"></a></li>
+		        <li><a href="/users/auth/<%=provider%>" class="<%=provider%>"></a></li>
 		      <% end %>
 		    <% end %>
 		  </ul>

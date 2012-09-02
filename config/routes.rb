@@ -1,10 +1,15 @@
 Simplifeed::Application.routes.draw do
-
+  root :to => 'home#index'
+  
   resources :links
   
   resources :uploads
+  
+  match '/users/auth/:provider/callback' => 'authentications#create'
+  match '/users/auth/failure' => 'authentications#failure'
 
-  root :to => 'home#index'
+  # Used for connecting facebook, etc. with an existing username/password account
+  match '/connect/:provider' => 'authentications#connect'
   
   # Main feed
   match '/feed' => 'users#show'
@@ -25,12 +30,6 @@ Simplifeed::Application.routes.draw do
       resources :tokens,:only => [:create, :destroy]
     end
   end
-
-  match '/auth/:provider/callback' => 'authentications#create'
-  match '/auth/failure' => 'authentications#failure'
-
-  # Used for connecting facebook, etc. with an existing username/password account
-  match '/connect/:provider' => 'authentications#connect'
 
   # Twitter, Facebook, and LinkedIn feeds
   match '/user/post' => 'users#post'
