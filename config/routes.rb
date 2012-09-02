@@ -1,6 +1,8 @@
 Simplifeed::Application.routes.draw do
 
   resources :links
+  
+  resources :uploads
 
   root :to => 'home#index'
   
@@ -25,13 +27,12 @@ Simplifeed::Application.routes.draw do
   end
 
   match '/auth/:provider/callback' => 'authentications#create'
-  
   match '/auth/failure' => 'authentications#failure'
 
   # Used for connecting facebook, etc. with an existing username/password account
   match '/connect/:provider' => 'authentications#connect'
 
-  # Add post
+  # Twitter, Facebook, and LinkedIn feeds
   match '/user/post' => 'users#post'
   
   # Update post content
@@ -70,7 +71,7 @@ Simplifeed::Application.routes.draw do
   # Resources for posts
   resources :posts
   
-  get "/:id", :to => "users#profile", :as => :user
+  get "/:id", :to => "users#profile", :as => :user, :constraints => { :id => /.*/ }
   
   resources :links do
     match ':in_url' => 'links#go' #added this line

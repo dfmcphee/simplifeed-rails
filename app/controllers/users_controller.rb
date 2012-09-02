@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: {'feed' => @simplifeed} }
+      format.json { render json: {'feed' => @simplifeed}, :callback => params[:callback] }
     end
   end
   

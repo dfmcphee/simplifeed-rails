@@ -1,29 +1,66 @@
-<h1>Listing uploads</h1>
+<script type="text/javascript" charset="utf-8"> 
+$(function () {
+  $('#new_upload').fileupload({
+  	
+	  dataType: 'json',
+        done: function (e, data) {
+            $.each(data.result, function (index, file) {
+                $('<p/>').text(file.name).appendTo(document.body);
+             });
+         },
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#progress .bar').css(
+            'width',
+            progress + '%'
+        );
+    }
+    });
+});
+</script>
 
-<table>
-  <tr>
-    <th>Picture file name</th>
-    <th>Picture content type</th>
-    <th>Picture file size</th>
-    <th>Picture update at</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @uploads.each do |upload| %>
-  <tr>
-    <td><%= upload.picture_file_name %></td>
-    <td><%= upload.picture_content_type %></td>
-    <td><%= upload.picture_file_size %></td>
-    <td><%= upload.picture_update_at %></td>
-    <td><%= link_to 'Show', upload %></td>
-    <td><%= link_to 'Edit', edit_upload_path(upload) %></td>
-    <td><%= link_to 'Destroy', upload, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+<div class="files"> 
+<%= form_for @upload, :html => { :class => "upload", :multipart => true } do |f| %>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="span7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="icon-plus icon-white"></i>
+                    <span>Add files...</span>
+                    <%= f.file_field :picture %>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="icon-trash icon-white"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
+            </div>
+            <!-- The global progress information -->
+            <div class="span5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="bar" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress information -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during file processing -->
+        <div class="fileupload-loading"></div>
+        <br>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
 <% end %>
-</table>
 
-<br />
-
-<%= link_to 'New Upload', new_upload_path %>
+<table class="upload_files"></table>
+<table class="download_files"></table>
+</div>

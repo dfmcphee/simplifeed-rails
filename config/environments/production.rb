@@ -21,9 +21,7 @@ Simplifeed::Application.configure do
   config.assets.digest = true
   
   #in config/environments/production.rb
-  config.to_prepare { Devise::SessionsController.force_ssl }
-  config.to_prepare { Devise::RegistrationsController.force_ssl }
-  config.to_prepare { Devise::PasswordsController.force_ssl }
+  config.force_ssl = true
   # or your customized controller, extending from Devise
 
   # Defaults to Rails.root.join("public/assets")

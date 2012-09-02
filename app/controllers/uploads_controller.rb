@@ -3,7 +3,8 @@ class UploadsController < ApplicationController
   # GET /uploads.json
   def index
     @uploads = Upload.all
-
+    @upload  = Upload.new
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @uploads }
@@ -41,16 +42,11 @@ class UploadsController < ApplicationController
   # POST /uploads.json
   def create
     @upload = Upload.new(params[:upload])
-
-    respond_to do |format|
-     	@upload = Upload.new(params[:upload])
-	    if @upload.save
-	      render :json => { :pic_path => @upload.picture.url.to_s , :name => @upload.picture.instance.attributes["picture_file_name"] }, :content_type => 'text/html'
-	    else
-	      #todo handle error
-	      render :json => { :result => 'error'}, :content_type => 'text/html'
-	    end
-	 end
+	  if @upload.save
+	    render :json => { :pic_path => @upload.picture.url.to_s , :name => @upload.picture.instance.attributes["picture_file_name"] }, :content_type => 'text/html'
+	  else
+	    render :json => { :result => 'error'}, :content_type => 'text/html'
+	  end
   end
 
   # PUT /uploads/1

@@ -35,6 +35,8 @@ class User < ActiveRecord::Base
                     :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
                     
   validates :username, :presence => true, :uniqueness => true
+  validates_format_of :username, :with => /^[A-Za-z\d_]+$/
+  
   validates :password, :confirmation => true
   validates :password_confirmation, :presence => true, :on => :create
   
