@@ -26,6 +26,10 @@
 	</div>
 	<div class="modal-body">
 		  <ul id="login">
+		  	<% if @providers.empty? %>
+		  		<li>Nothing to see here.</li>
+		  	<% end %>
+		  	
 		    <% @providers.each do |provider| %>
 		      <% if ! @authorized_providers.include?(provider) %>
 		        <li><a href="/users/auth/<%=provider%>" class="<%=provider%>"></a></li>
@@ -47,7 +51,7 @@
 			        <% @providers.each do |provider| %>
 			          <% if @authorized_providers.include?(provider) %>
 				          <li>
-				           <%= check_box_tag 'providers[]', provider, true, :id => "post_to_#{provider}" %>
+				           <%= check_box_tag 'providers[]', provider, false, :id => "post_to_#{provider}" %>
 				            <img src="/images/buttons/<%=provider%>_16.png" />
 				          </li>
 			          <% end %>

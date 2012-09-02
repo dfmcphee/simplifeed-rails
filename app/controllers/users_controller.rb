@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     if current_user
     	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
     end
-    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    @updates = []
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
 
     @users = User.find(:all, :select=>'username').map(&:username)

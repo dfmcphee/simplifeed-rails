@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   before_save :ensure_authentication_token!
   
-  devise :database_authenticatable, :token_authenticatable, :omniauthable, :registerable, :recoverable, :rememberable, :trackable, :lastseenable
+  devise :database_authenticatable, :token_authenticatable, :omniauthable, :registerable, :recoverable, :rememberable, :trackable, :lastseenable, :invitable
 
   attr_accessor :login
   

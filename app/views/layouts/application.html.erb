@@ -157,9 +157,10 @@
 		      	<div id="growl-notifications" class="span12"></div>
 		      </div>
 		      <div class="row-fluid">
-		      	<div class="span12">
+		      	<div id="flash-notifications" class="span12">
 		      	<% if !flash.empty? %>
 			      <div id="flash" class="span12 alert alert-<%= @alert_style %>">
+			      	<button type="button" class="close" data-dismiss="alert">×</button>
 			        <% flash.each do |key, value| %>
 			          <div title="<%= key.to_s.humanize %>">
 			            <p><%= value %></p>

@@ -11,6 +11,7 @@ gem 'rails_autolink'
 
 gem "devise", "~> 2.1.0"
 gem "devise_lastseenable", "~> 0.0.4"
+gem "devise_invitable", "~> 1.1.0"
 
 gem "paperclip", "~> 3.0"
 
