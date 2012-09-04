@@ -13,6 +13,8 @@ gem "devise", "~> 2.1.0"
 gem "devise_lastseenable", "~> 0.0.4"
 gem "devise_invitable", "~> 1.1.0"
 
+gem "cancan"
+
 gem "paperclip", "~> 3.0"
 
 gem "pusher", "~> 0.9.4"

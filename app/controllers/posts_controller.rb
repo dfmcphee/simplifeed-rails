@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  load_and_authorize_resource
+
   before_filter :authenticate_user!
   before_filter :get_online_friends
   

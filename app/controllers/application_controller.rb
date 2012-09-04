@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :get_online_friends
   
+  # if a user does not have sufficient permission to access a page, redirect them to the root path
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_path, :alert => exception.message
+  end
+  
   def dismiss_notification
   	if (params[:notification_id] != '')
   		@notification = Notification.find(params[:notification_id])
@@ -87,6 +92,5 @@ class ApplicationController < ActionController::Base
 	    end
     end
   end
- 
   
 end
