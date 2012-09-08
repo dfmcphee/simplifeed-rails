@@ -12,33 +12,6 @@ html, body { height: 98%; }
 	text-align: right;
 }
 
-#post, #instructions, #login {
-  height: 100px;
-}
-
-#login {
-  list-style-type: none;
-  float: left;
-  margin: 0 10px 0 0;
-  padding-left: 0;
-
-  a {
-    display: block;
-    height: 22px;
-    width: 150px;
-    margin: 4px 0px;
-    
-    &:hover {
-      background-position: 0px -24px;
-    }
-
-    &.twitter { background-image: url(/images/buttons/twitter_signin.png); }
-    &.facebook { background-image: url(/images/buttons/facebook_signin.png); }
-    &.linkedin { background-image: url(/images/buttons/linkedin_signin.png); }
-  }
-  
-}
-
 .inline-mobile {
 	display: inline-block !important;
 }
@@ -70,69 +43,99 @@ div.field_with_errors {
 	min-height: 0px;
 }
 
+#add-provider {
+	height:50%;
+	width:50%;
+	margin:0;
+	
+	a {
+		width:70%;
+		margin-bottom:1em;
+		margin-left:auto;
+		margin-right:auto;
+		font-size:1.4em;
+	}
+	
+	i {
+		font-size: 1.1em;
+	}
+}
+
 #post {
-  height: 270px;
-  width: 632px;
+  height: 50%;
+  width: 50%;
+  margin:0;
+  overflow:hidden;
   
-  textarea {
-    height: 72px;
-    width: 550px;
-    float: left;
-    margin-right: 5px;
+  form {
+	  height:65%;
   }
   
-  ul li {
-    height: 18px;
-    margin-bottom: 2px;
-    
-    input, img {
-      height: 16px;
-      width: 16px;
-    }
+  .modal-body {
+	  height:85%;
+  }
+  
+  .modal-footer {
+	  height:100%;
+  }
+  
+  textarea {
+    height: 90%;
+    width: 98%;
+    float: left;
+    margin-right: 5px;
   }
 }
 
 #edit-post {
-  height: 270px;
-  width: 632px;
+  height: 50%;
+  width: 50%;
+  margin:0;
+  overflow:hidden;
   
-  textarea {
-    height: 72px;
-    width: 550px;
-    float: left;
-    margin-right: 5px;
+  form {
+	  height:65%;
   }
   
-  ul li {
-    height: 18px;
-    margin-bottom: 2px;
-    
-    input, img {
-      height: 16px;
-      width: 16px;
-    }
+  .modal-body {
+	  height:85%;
+  }
+  
+  .modal-footer {
+	  height:100%;
+  }
+  
+  textarea {
+    height: 90%;
+    width: 98%;
+    float: left;
+    margin-right: 5px;
   }
 }
 
 #comment-post {
-  height: 270px;
-  width: 632px;
+  height: 50%;
+  width: 50%;
+  margin:0;
+  overflow:hidden;
   
-  textarea {
-    height: 72px;
-    width: 550px;
-    float: left;
-    margin-right: 5px;
+  form {
+	  height:65%;
   }
   
-  ul li {
-    height: 18px;
-    margin-bottom: 2px;
-    
-    input, img {
-      height: 16px;
-      width: 16px;
-    }
+  .modal-body {
+	  height:85%;
+  }
+  
+  .modal-footer {
+	  height:100%;
+  }
+  
+  textarea {
+    height: 90%;
+    width: 98%;
+    float: left;
+    margin-right: 5px;
   }
 }
 
@@ -147,6 +150,14 @@ div.field_with_errors {
 #post-providers li {
 	display:inline;
 	list-style-type: none;
+}
+
+.profile-actions {
+	margin-top:30px;
+}
+
+.friend-card {
+	margin-bottom:15px;
 }
 
 /*
@@ -243,5 +254,76 @@ div.field_with_errors {
   .files .delete {
     width: 60px;
   }
+  
+  input.btn.search-friends {
+	margin-top:1em;
+  }
+  
+  #add-provider a.btn {
+	width:95%;
+  }
+  
+  div.hero-unit h1 {
+	  font-size: 3.4em;
+  }
+  
+  div.row-fluid div.hero-unit {
+	  padding:10px;
+  }
+ 
 }
 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {	
+  #add-provider {
+		width:90%;
+		height:90%;
+  }
+	
+  #add-provider a.btn {
+		margin-left:0;
+		width:100%;
+  }
+	
+  #post {
+  	height: 90%;
+  	width: 90%;
+  	margin:0;
+  }
+  
+  #edit-post {
+  	height: 90%;
+  	width: 90%;
+  	margin:0;
+  }
+  
+  #comment-post {
+	  height: 90%;
+	  width: 90%;
+	  margin:0;
+  }
+  
+  .row-fluid .post-content.span10.inline-mobile {
+	width: 68%;
+	margin-left: 4%;
+	float: left;
+  }
+  
+  .profile-image.span2.inline-mobile {
+	  width: 20%;
+	  float: left;
+  }
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+	#simplifeed .well {
+		display:block;
+		width:100%;
+	}
+	
+	#feeds {
+		width:92%;
+		margin-left:0;
+	}
+}

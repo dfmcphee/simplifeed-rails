@@ -35,7 +35,7 @@
 	  <h3>Profile Picture</h3>
 	  <div class="control-group">
 	   <%= image_tag(@user.photo.url(:thumb)) %>
-	   <%= f.file_field :photo %>
+	   <%= f.file_field :photo, :class=>"btn" %>
 	  </div>
 	</div>
 	<div class="span6">
@@ -58,7 +58,7 @@
 	  	<%= f.password_field :current_password %>
 	  </div>
 	
-	  <div><%= f.submit "Update" %></div>
+	  <div><%= f.submit "Update", :class =>"btn btn-primary" %></div>
 	<% end %>
 	</div>
 </div>

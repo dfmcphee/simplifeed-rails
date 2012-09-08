@@ -1,0 +1,18 @@
+<div class="row-fluid friend-card">
+	<div class="profile-image span3 inline-mobile">
+    	<% if friend.photo.url(:thumb) %>
+    	  <%= image_tag(friend.photo.url(:thumb)) %>
+    	<% end %>
+    </div>
+    <div class="span8 offset1 inline-mobile">
+    	<p class="lead">
+    		<a href="/<%= friend.username %>">
+    		<% if friend.first_name != nil && friend.first_name != '' && friend.last_name != nil %>
+    			<%= friend.first_name %> <%= friend.last_name %>
+    		<% else %>
+    			<%= friend.username %>
+    		<% end %>
+    		</a>
+    	</p>
+    </div>
+</div>

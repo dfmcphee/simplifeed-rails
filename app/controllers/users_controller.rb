@@ -21,6 +21,16 @@ class UsersController < ApplicationController
     end
   end
   
+  def delete 
+  	@user = User.find(params[:id])
+  	if current_user === @user
+  		respond_to do |format|
+	  		format.html # new.html.erb
+	  		format.json { render json: {'message' => 'Succesfully unsubscribed.'} }
+	  	end
+  	end
+  end
+  
   def online_friends
   	@online_friends = []
   	@unread_messages = Hash.new()
@@ -59,7 +69,7 @@ class UsersController < ApplicationController
     if current_user
     	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
     end
-    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    @updates = []
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
 
     @users = User.find(:all, :select=>'username').map(&:username)
@@ -91,6 +101,24 @@ class UsersController < ApplicationController
     @inverse_friends = User.find_all_by_id(@inverse_friends)
     
     @friends = @friends + @inverse_friends
+    
+    @recommendations = []
+    
+    @friends.each do |f|
+		# Mutual friends of a friend	
+		friend = User.find(f.id)
+		
+	    mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND user_id = ? AND friend_id != ? AND friend_id NOT IN (?) ", true, friend.id, current_user.id, @friends])
+	    mutual_friends = mutual_friends.map{|friend| friend.friend_id}
+	    mutual_friends = User.find_all_by_id(mutual_friends)
+	    
+	    # Friends of a mutual friend
+	    inverse_mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND friend_id = ? AND user_id != ? AND user_id NOT IN (?) ", true, friend.id, current_user.id, @friends])
+	    inverse_mutual_friends = inverse_mutual_friends.map{|friend| friend.user_id}
+	    inverse_mutual_friends = User.find_all_by_id(inverse_mutual_friends)
+	    
+	    @recommendations = @recommendations + mutual_friends + inverse_mutual_friends
+    end
   end
 
   # Loop through the checked providers from the form and send the

@@ -8,6 +8,7 @@ class Ability
 	    user ||= User.new
 	    friends = user.inverse_friends.map(&:id) + user.friends.map(&:id) + [user.id]
 	    
+	    # Posts
 	    can :show, Post, :user_id => friends
 	    can :destroy, Post, :user_id => user.id
 	    can [:like_post, :mentions, :favs], Post

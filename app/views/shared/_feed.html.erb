@@ -32,7 +32,13 @@
 		  	
 		    <% @providers.each do |provider| %>
 		      <% if ! @authorized_providers.include?(provider) %>
-		        <li><a href="/users/auth/<%=provider%>" class="<%=provider%>"></a></li>
+		        <li>
+		        	<% if provider === "twitter" %>
+		        		<a href="/users/auth/<%=provider%>" class="btn btn-large btn-block btn-primary"><i class="icon-twitter"></i> Sign in with Twitter</a>
+		        	<% elsif provider === "facebook" %>
+		        		<a href="/users/auth/<%=provider%>" class="btn btn-large btn-block btn-info"><i class="icon-facebook"></i> Sign in with Facebook</a>
+		        	<% end %>
+		        </li>
 		      <% end %>
 		    <% end %>
 		  </ul>

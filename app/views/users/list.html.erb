@@ -1,49 +1,62 @@
 <div class="page-header">
 	<%= form_tag(:action => 'request_friendship') %>
 		<input name="friend_username" type="text" autocomplete="off" placeholder="Enter username to search." style="margin: 0 auto;" data-provide="typeahead" data-items="8" data-source='<%= @users.to_json %>'>
-		<input type="submit" value="Send Friend Request" class="btn btn-primary" />
+		<input type="submit" value="Send Friend Request" class="search-friends btn btn-primary" />
 	</form>
 </div>
 
-<% if !@requested_friends.empty? %>
-	<div class="row-fluid">
-		<div class="span12 well">
-			<h3>Friend Request Sent</h3>
-			<% @requested_friends.each do |friend| %>
-				<p><a href="/<%= friend.username %>"><%= friend.username %></a></p>
+<div class="row-fluid">
+		<div class="span6">
+			<% if !@friends.empty? %>
+				<div class="row-fluid">
+					<div class="span12 well">
+						<h3>Friends</h3>
+						<% @friends.each do |friend| %>
+							<%= render "shared/friend", :friend => friend %>
+						<% end %>
+					</div>
+				</div>
+			<% else %>
+				<div class="row-fluid">
+					<div class="span12 well">
+						<p class="lead">You still don't have any friends! What are you waiting for?</p>
+					</div>
+				</div>
 			<% end %>
 		</div>
-	</div>
-<% end %>
-
-<% if !@incoming_requests.empty? %>
-	<div class="row-fluid">
-		<div class="span12 well">
-			<h3>Incoming Friend Requests</h3>
-			<% @incoming_requests.each do |friend| %>
-				<p>
-					<a href="/<%= friend.username %>"><%= friend.username %></a>
-					<% @friendship = Friendship.find(:first, :conditions => [ "user_id = ? AND friend_id = ?", friend.id, current_user.id]) %>
-					<%= link_to "Approve Friend Request", :controller => "users", :action => "approve_friendship", :friendship_id => @friendship.id  %>
-				</p>
+		<div class="span6">
+		<% if !@recommendations.empty? %>
+				<div class="row-fluid">
+					<div class="span12 well">
+						<h3>Recommended Friends</h3>
+						<% @recommendations.each do |friend| %>
+							<%= render "shared/friend", :friend => friend %>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+			<% if !@requested_friends.empty? %>
+				<div class="row-fluid">
+					<div class="span12 well">
+						<h3>Friend Requests Sent</h3>
+						<% @requested_friends.each do |friend| %>
+							<%= render "shared/friend", :friend => friend %>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+			
+			<% if !@incoming_requests.empty? %>
+				<div class="row-fluid">
+					<div class="span12 well">
+						<h3>Incoming Friend Requests</h3>
+						<% @incoming_requests.each do |friend| %>
+							<%= render "shared/friend", :friend => friend %>
+							<% @friendship = Friendship.find(:first, :conditions => [ "user_id = ? AND friend_id = ?", friend.id, current_user.id]) %>
+							<%= link_to "Approve Friend Request", :controller => "users", :action => "approve_friendship", :friendship_id => @friendship.id  %>
+						<% end %>
+					</div>
+				</div>
 			<% end %>
 		</div>
-	</div>
-<% end %>
-
-<% if !@friends.empty? %>
-	<div class="row-fluid">
-		<div class="span12 well">
-			<h3>Friends</h3>
-			<% @friends.each do |friend| %>
-				<p><a href="/<%= friend.username %>"><%= friend.username %></a></p>
-			<% end %>
-		</div>
-	</div>
-<% else %>
-	<div class="row-fluid">
-		<div class="span12 well">
-			<p class="lead">You still don't have any friends! What are you waiting for?</p>
-		</div>
-	</div>
-<% end %>
+</div>

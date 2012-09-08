@@ -1,10 +1,6 @@
 Simplifeed::Application.routes.draw do
   root :to => 'home#index'
   
-  resources :links
-  
-  resources :uploads
-  
   match '/users/auth/:provider/callback' => 'authentications#create'
   match '/users/auth/failure' => 'authentications#failure'
 
@@ -22,6 +18,8 @@ Simplifeed::Application.routes.draw do
   
   devise_for :users do
     get "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
+    match '/users/show' => 'users#show'
+    match '/users/show' => 'users#show'
     match '/users/show' => 'users#show'
   end
   

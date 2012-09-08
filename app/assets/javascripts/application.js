@@ -198,10 +198,10 @@ var updateChatList = function() {
 				friend_count = '<span class="badge unread-count">0</span> ';
 			}
 			if (($.inArray(friend.id, data.online)) >= 0) {
-				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + ' <span class="label label-info">Online</span></a></li>';
+				friend_cell = '<li><a href="#" class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + ' <span class="label label-info">Online</span></a></li>';
 			}
 			else {
-				friend_cell = '<li><a class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + '</a></li>';
+				friend_cell = '<li><a href="#" class="toggle-chat" data-toggle="modal" data-target="#chat-' + friend.id + '">' + friend_count + friend.username + '</a></li>';
 			}
 		    $("#messages").append(friend_cell);
 		});
@@ -427,3 +427,26 @@ jQuery(document).ready(function() {
   document.createElement("abbr");
   document.createElement("time");
 }(jQuery));
+
+jQuery.fn.center = function () {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - this.outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - this.outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
+$(document).ready(function() {
+  $('#post').center();
+  $('#edit-post').center();
+  $('#comment-post').center();
+  $('#add-provider').center();
+});
+
+$(window).resize(function() {
+  $('#post').center();
+  $('#edit-post').center();
+  $('#comment-post').center();
+  $('#add-provider').center();
+});

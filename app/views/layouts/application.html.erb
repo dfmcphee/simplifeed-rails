@@ -58,7 +58,7 @@
 								  	<% chat = {'friend' => recent_friend, 'messages' => messages} %>
 								  	<% @chat_modals.push(chat) %>
 								  	<li>								  	
-								  		<a class="toggle-chat" data-toggle="modal" data-target="#chat-<%= recent_friend.id %>">
+								  		<a href="#" class="toggle-chat" data-toggle="modal" data-target="#chat-<%= recent_friend.id %>">
 								  			<% if !unread_messages.empty? %>
 								  				<span class="badge badge-info unread-count"><%= unread_messages.size %></span>
 								  			<% else %>
