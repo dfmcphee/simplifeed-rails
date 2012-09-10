@@ -1,6 +1,7 @@
 Simplifeed::Application.routes.draw do
   root :to => 'home#index'
   
+  # Callback and failure for providers
   match '/users/auth/:provider/callback' => 'authentications#create'
   match '/users/auth/failure' => 'authentications#failure'
 
@@ -16,6 +17,7 @@ Simplifeed::Application.routes.draw do
   # Favs
   match '/favs' => 'posts#favs'
   
+  # Devise
   devise_for :users do
     get "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
     match '/users/show' => 'users#show'
@@ -23,6 +25,7 @@ Simplifeed::Application.routes.draw do
     match '/users/show' => 'users#show'
   end
   
+  # API and tokens
   namespace :api do
     namespace :v1  do
       resources :tokens,:only => [:create, :destroy]
@@ -68,6 +71,7 @@ Simplifeed::Application.routes.draw do
   # Resources for posts
   resources :posts
   
+  # Get profiles by username
   get "/:id", :to => "users#profile", :as => :user, :constraints => { :id => /.*/ }
   
   resources :links do

@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   	if current_user === @user
   		respond_to do |format|
 	  		format.html # new.html.erb
-	  		format.json { render json: {'message' => 'Succesfully unsubscribed.'} }
+	  		format.json { render json: {'message' => 'Succesfully unsubscribed.', :callback => params[:callback]} }
 	  	end
   	end
   end
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   	
   	respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: {'recent' => @recent_friends, 'online' => @online_friends, :unread => @unread_messages } }
+      format.json { render json: {'recent' => @recent_friends, 'online' => @online_friends, :unread => @unread_messages, :callback => params[:callback]} }
     end
   end
   
@@ -66,9 +66,11 @@ class UsersController < ApplicationController
 	end
   	
   	@providers = %w(facebook twitter)
+  	
     if current_user
     	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
     end
+    
     @updates = []
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
 
@@ -108,12 +110,12 @@ class UsersController < ApplicationController
 		# Mutual friends of a friend	
 		friend = User.find(f.id)
 		
-	    mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND user_id = ? AND friend_id != ? AND friend_id NOT IN (?) ", true, friend.id, current_user.id, @friends])
+	    mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND user_id = ? AND friend_id != ? AND friend_id NOT IN (?) AND friend_id NOT IN (?)", true, friend.id, current_user.id, @friends, @requested_friends])
 	    mutual_friends = mutual_friends.map{|friend| friend.friend_id}
 	    mutual_friends = User.find_all_by_id(mutual_friends)
 	    
 	    # Friends of a mutual friend
-	    inverse_mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND friend_id = ? AND user_id != ? AND user_id NOT IN (?) ", true, friend.id, current_user.id, @friends])
+	    inverse_mutual_friends = Friendship.find(:all, :conditions => ["approved = ? AND friend_id = ? AND user_id != ? AND user_id NOT IN (?) AND user_id NOT IN (?)", true, friend.id, current_user.id, @friends, @requested_friends])
 	    inverse_mutual_friends = inverse_mutual_friends.map{|friend| friend.user_id}
 	    inverse_mutual_friends = User.find_all_by_id(inverse_mutual_friends)
 	    
