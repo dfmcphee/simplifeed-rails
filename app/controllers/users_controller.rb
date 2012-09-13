@@ -15,6 +15,23 @@ class UsersController < ApplicationController
     @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['user_id IN (?) AND reply_to = ?', friends, 0])
     @upload  = Upload.new
     
+    if request.format === 'json'
+    	posts = []
+    	@simplifeed.each do |item|	
+    		poster = User.find(item.user_id)
+    		
+    		if !poster.first_name.nil? && poster.first_name != ''
+    			name = poster.first_name + ' ' + poster.last_name
+    		else
+    			name = poster.username
+    		end
+    		
+    		posts.push({:name => name, :avatar => poster.photo.url(:thumb), :content => item.content, :created_at => item.created_at})
+    	end
+    	
+    	@simplifeed = posts
+    end
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: {'feed' => @simplifeed}, :callback => params[:callback] }

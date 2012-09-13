@@ -45,6 +45,23 @@ class PostsController < ApplicationController
     @mentions = current_user.mentions.map(&:post_id)
     @simplifeed = Post.where(:id => @mentions)
     
+    if request.format === 'json'
+    	posts = []
+    	@simplifeed.each do |item|	
+    		poster = User.find(item.user_id)
+    		
+    		if !poster.first_name.nil? && poster.first_name != ''
+    			name = poster.first_name + ' ' + poster.last_name
+    		else
+    			name = poster.username
+    		end
+    		
+    		posts.push({:name => name, :avatar => poster.photo.url(:thumb), :content => item.content, :created_at => item.created_at})
+    	end
+    	
+    	@simplifeed = posts
+    end
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: {'feed' => @simplifeed} }
@@ -60,6 +77,23 @@ class PostsController < ApplicationController
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
     likes = Like.where(:user_id => current_user.id).map(&:post_id)
     @simplifeed = Post.find(:all, :order => "created_at DESC", :limit => 10, :conditions => ['id IN (?)', likes])
+    
+    if request.format === 'json'
+    	posts = []
+    	@simplifeed.each do |item|	
+    		poster = User.find(item.user_id)
+    		
+    		if !poster.first_name.nil? && poster.first_name != ''
+    			name = poster.first_name + ' ' + poster.last_name
+    		else
+    			name = poster.username
+    		end
+    		
+    		posts.push({:name => name, :avatar => poster.photo.url(:thumb), :content => item.content, :created_at => item.created_at})
+    	end
+    	
+    	@simplifeed = posts
+    end
     
     respond_to do |format|
       format.html # new.html.erb
