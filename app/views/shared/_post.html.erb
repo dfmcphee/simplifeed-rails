@@ -33,8 +33,8 @@
 	    %>
 	    <% 
 		    
-		    content = auto_link(content, :all) do |text|
-			    truncate(text, :length => 24)
+		    content = auto_link(content, :html => { :class => 'to-oembed' })do |text|
+			    truncate(text, :length => 28)
 			end
 	    %>
 	    <div class="post-content span10 inline-mobile"><%= raw(content) %></div>
@@ -44,7 +44,7 @@
 	    	<div class="btn-toolbar">
         		<% likes = Like.find(:all, :conditions => ['post_id = ?', post.id]) %>
         		<div class="btn-group">
-        			<a class="btn open-comment-post" post="<%= post.id %>" data-toggle="modal" href="#comment-post"><i class="icon-comment"></i></a>
+        			<a class="btn open-comment-post" data-toggle="collapse" data-target="#comment-post-<%= post.id %>"><i class="icon-comment"></i></a>
         			<% if !comments.empty? %>
 				     <a class="btn" data-toggle="collapse" data-target="#comments-<%= post.id %>">
         				<span class="badge"><%= comments.size %></span>
@@ -87,14 +87,10 @@
 					  <% end %>
 					  </div>
 					  <div class="btn-group">
-						  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						    <i class="icon-edit"></i>
-						    <span class="caret"></span>
+					  	  <a class="btn" data-toggle="collapse" data-target="#edit-post-<%= post.id %>">
+						  	<i class="icon-edit"></i>
+						    <span class="caret"></span>						  
 						  </a>
-						  <ul class="dropdown-menu">
-						    <li><a class="open-edit-post" post="<%= post.id %>" data-toggle="modal" href="#edit-post"><i class="icon-edit"></i> Edit</a></li>
-						    <li><a class="open-confirm-delete" post="<%= post.id %>" data-toggle="modal" href="#confirm-delete"><i class="icon-remove"></i> Delete</a></li>
-						  </ul>
 					  </div>
 				<% elsif controller.is_liked(post.id) %>
 	        		<div class="btn-group">
@@ -142,7 +138,35 @@
 	    </div>
 	</div>
 </div>
-
+<div id="edit-post-<%= post.id %>" class="collapse edit-post">
+  <div class="well">
+  		<%= form_tag(:action => 'update_post',  :controller => '/users') %>
+			<input type="hidden" value="<%= post.id %>" id="post_id" name="post_id" />
+			<div class="modal-body">
+		    	<%= text_area_tag :body, post.content %>
+			 </div>
+			 <div class="footer">
+			 	<div id="out"></div>
+			 	<a class="btn btn-danger open-confirm-delete" post="<%= post.id %>" data-toggle="modal" href="#confirm-delete"><i class="icon-remove"></i> Delete Post</a>
+			 	<input type="submit" value="Update Post" class="btn btn-primary pull-right" />
+			 	<div class="clearfix"></div>
+			 </div>
+		</form>
+  </div>
+</div>
+<div id="comment-post-<%= post.id %>" class="collapse comment-post">
+  <div class="well">
+		<%= form_tag(:action => 'reply_to_post', :controller => '/users') %>
+			<input type="hidden" value="<%= post.id %>" id="reply_to" name="reply_to" />
+		    <div class="modal-body">
+		    	<%= text_area_tag :body %>
+			 </div>
+			 <div class="modal-footer">
+			 	<input type="submit" value="Comment" class="btn btn-primary" />
+			 </div>
+		</form>
+  </div>
+</div>
 <% if single_post %>
 <div id="comments-<%= post.id %>" class="collapse in">
 <% else %>

@@ -15,9 +15,9 @@
 	<i class="icon-user icon-white"></i> Connect Account
 </a>
 
-<a class="btn btn-inverse pull-right" data-toggle="modal" href="#post">
-	<i class="icon-plus icon-white"></i> Add Post
-</a>
+      <button type="button" class="btn btn-inverse pull-right" data-toggle="collapse" data-target="#add-post">
+		  <i class="icon-plus icon-white"></i> Add Post
+	  </button>
 
 <div id="add-provider" class="modal hide fade">
 	<div class="modal-header">
@@ -31,7 +31,7 @@
 		  	<% end %>
 		  	
 		    <% @providers.each do |provider| %>
-		      <% if ! @authorized_providers.include?(provider) %>
+		      <% if !@authorized_providers.include?(provider) %>
 		        <li>
 		        	<% if provider === "twitter" %>
 		        		<a href="/users/auth/<%=provider%>" class="btn btn-large btn-block btn-primary"><i class="icon-twitter"></i> Sign in with Twitter</a>
@@ -44,31 +44,6 @@
 		  </ul>
 	</div>
 </div>
-
-<div id="post" class="modal hide fade">
-		<div class="modal-header">
-			<button class="close" data-dismiss="modal">×</button>
-			<h3>Add Post</h3>
-		</div>
-		<%= form_tag(:controller => 'users', :action => 'post') %>
-		    <div class="modal-body">
-		    	<%= text_area_tag :body %>		      
-				<ul id="post-providers">
-			        <% @providers.each do |provider| %>
-			          <% if @authorized_providers.include?(provider) %>
-				          <li>
-				           <%= check_box_tag 'providers[]', provider, false, :id => "post_to_#{provider}" %>
-				            <img src="/images/buttons/<%=provider%>_16.png" />
-				          </li>
-			          <% end %>
-			        <% end %>
-			    </ul>
-			 </div>
-			 <div class="modal-footer">
-			 	<input type="submit" value="Post" class="btn btn-primary" />
-			 </div>
-		</form>
-	</div>
 
 
 <div id="simplifeed" class="row-fluid">
@@ -98,6 +73,30 @@
 		</ul>
 	</div>
 	<div id="feeds" class="span8">
+	  <div id="add-post" class="collapse">
+	  	<div class="well">
+			  <%= form_tag(:controller => 'users', :action => 'post') %>
+			    <div class="">
+			    	<%= text_area_tag :body %>		      
+					<ul id="post-providers">
+				        <% @providers.each do |provider| %>
+				          <% if @authorized_providers.include?(provider) %>
+					          <li>
+					           <%= check_box_tag 'providers[]', provider, false, :id => "post_to_#{provider}" %>
+					            <img src="/images/buttons/<%=provider%>_16.png" />
+					          </li>
+				          <% end %>
+				        <% end %>
+				    </ul>
+				 </div>
+				 <div class="footer">
+				 	<div id="out"></div>
+				 	<input type="submit" value="Post" class="btn btn-primary pull-right" />
+				 	<div class="clearfix"></div>
+				 </div>
+			</form>
+		</div>
+	  </div>
 	  <% if @simplifeed.empty? %>
 	  	<div class="well post-item">
 		  	<div class="row-fluid">

@@ -61,82 +61,41 @@ div.field_with_errors {
 	}
 }
 
-#post {
-  height: 50%;
-  width: 50%;
-  margin:0;
-  overflow:hidden;
-  
-  form {
-	  height:65%;
-  }
-  
-  .modal-body {
-	  height:85%;
-  }
-  
-  .modal-footer {
-	  height:100%;
-  }
-  
-  textarea {
-    height: 90%;
-    width: 98%;
-    float: left;
-    margin-right: 5px;
-  }
+#add-post {
+	textarea {
+		width:98%;
+		min-height:100px;
+	}
+	
 }
 
-#edit-post {
-  height: 50%;
-  width: 50%;
-  margin:0;
-  overflow:hidden;
-  
-  form {
-	  height:65%;
-  }
-  
-  .modal-body {
-	  height:85%;
-  }
-  
-  .modal-footer {
-	  height:100%;
-  }
-  
-  textarea {
-    height: 90%;
-    width: 98%;
-    float: left;
-    margin-right: 5px;
-  }
+.edit-post {
+	.well {
+		
+	}
+	
+	textarea {
+		width: 98%;
+		min-height:100px;
+	}
 }
 
-#comment-post {
-  height: 50%;
-  width: 50%;
-  margin:0;
-  overflow:hidden;
-  
-  form {
-	  height:65%;
-  }
-  
-  .modal-body {
-	  height:85%;
-  }
-  
-  .modal-footer {
-	  height:100%;
-  }
-  
-  textarea {
-    height: 90%;
-    width: 98%;
-    float: left;
-    margin-right: 5px;
-  }
+.comment-post {
+	.well {
+		
+	}
+	
+	textarea {
+		width: 98%;
+		min-height:100px;
+	}
+}
+
+.oembedall-container {
+	p.lead {
+		margin-top:10px;
+		margin-bottom:0px;
+	}
 }
 
 #simplifeed {

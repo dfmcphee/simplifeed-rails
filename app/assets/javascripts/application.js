@@ -81,7 +81,6 @@ $(document).ready(function() {
 				$('a[data-target=#chat-' + data.friend + ']').find('.unread-count').html(count);
 				
 				
-				
 				var chat_feed = $('#chat-' + data.friend + ' .chat-feed');
 				
 				var message = '<p>' + data.friend_username + ': ' + data.message + '<span class="pull-right">' + data.time + '</span></p>';
@@ -106,13 +105,13 @@ $(document).ready(function() {
 	});
 	
 	$('.collapse').on('shown', function () {
-  		$(this).addClass('overflowing');
-  		$(this).find('.collapse').addClass('overflowing');
+  		//$(this).addClass('overflowing');
+  		//$(this).find('.collapse').addClass('overflowing');
   	});
   	
   	$('.collapse').on('hide', function () {
-	  	$(this).removeClass('overflowing');
-	  	$(this).find('.collapse').removeClass('overflowing');
+	  	//$(this).removeClass('overflowing');
+	  	//$(this).find('.collapse').removeClass('overflowing');
   	});
 	
 	// Open edit post modal
@@ -120,6 +119,7 @@ $(document).ready(function() {
 	  var post_id = $(this).attr('post');
 	  var content = $(this).closest('.post-item').find('.post-content').html();
 	  $('#post_id').val(post_id);
+	  content = strip(content);
 	  $('#edit-post #body').val(content);
 	});
 	
@@ -179,8 +179,77 @@ $(document).ready(function() {
 	// Make all links to images open in fancy box
 	$("a[href$='.jpg'],a[href$='.jpeg'],a[href$='.png'],a[href$='.gif']").attr('rel', 'gallery').fancybox();
 	
+	$(".to-oembed").oembed(null,{
+			embedMethod: 'auto',
+			apikeys: {
+				//etsy : 'd0jq4lmfi5bjbrxq2etulmjr',
+				amazon : 'caterwall-20',
+				//eventbrite: 'SKOFRBQRGNQW5VAS6P',
+			},
+			//maxHeight: 200, maxWidth:300
+	});
+	
+	// Add keyup callback for post
+	$('#body').keyup(function(){
+		tagdata = [];
+		eventdata = [];
+		var scriptruns = [];
+		var text = $('#body').val();
+		text = $('<span>'+text+'</span>').text(); //strip html
+		text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+		text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+		
+	  if(new RegExp("[a-zA-Z0-9]+://([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(text)) {
+		  $('#out').empty().html(text);
+	  }
+		
+		
+		
+		$(".oembed").oembed(null,{
+			apikeys: {
+				//etsy : 'd0jq4lmfi5bjbrxq2etulmjr',
+				amazon : 'caterwall-20',
+				//eventbrite: 'SKOFRBQRGNQW5VAS6P',
+			},
+			//maxHeight: 200, maxWidth:300
+		});
+		
+	});
+	
+	// Add keyup callback for edit-post
+	$('.edit-post #body').keyup(function(){
+		tagdata = [];
+		eventdata = [];
+		var scriptruns = [];
+		var text = $(this).val();
+		text = $('<span>'+text+'</span>').text(); //strip html
+		text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+		text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+		
+	  if(new RegExp("[a-zA-Z0-9]+://([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(text)) {
+		  $(this).closest('.edit-post').find('#out').empty().html(text);
+	  }
+		
+		$(".oembed").oembed(null,{
+			apikeys: {
+				//etsy : 'd0jq4lmfi5bjbrxq2etulmjr',
+				amazon : 'caterwall-20',
+			},
+		});
+		
+	}); 
 	
 	setInterval(updateChatList,25000);
+});
+
+function strip(html) {
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent||tmp.innerText;
+}
+	
+$(window).load(function(){
+  $('.oembedall-container').fitVids();
 });
 
 var updateChatList = function() {
