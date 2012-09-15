@@ -190,21 +190,25 @@ $(document).ready(function() {
 	});
 	
 	// Add keyup callback for post
-	$('#body').keyup(function(){
+	$('#add-post #body').keyup(function(){
 		tagdata = [];
 		eventdata = [];
 		var scriptruns = [];
 		var text = $('#body').val();
-		text = $('<span>'+text+'</span>').text(); //strip html
-		text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
-		text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
-		
-	  if(new RegExp("[a-zA-Z0-9]+://([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(text)) {
-		  $('#out').empty().html(text);
-	  }
-		
-		
-		
+
+       var urls = findUrls(text)
+       
+       if (urls) {
+       		text = urls.join(" ");
+			text = $('<span>'+text+'</span>').text(); //strip html
+			text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+			text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+			$('#add-post #out').empty().html(text);
+	   }
+	   else {
+		   $('#add-post #out').empty();
+	   }
+	  		
 		$(".oembed").oembed(null,{
 			apikeys: {
 				//etsy : 'd0jq4lmfi5bjbrxq2etulmjr',
@@ -222,13 +226,18 @@ $(document).ready(function() {
 		eventdata = [];
 		var scriptruns = [];
 		var text = $(this).val();
-		text = $('<span>'+text+'</span>').text(); //strip html
-		text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
-		text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
-		
-	  if(new RegExp("[a-zA-Z0-9]+://([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?").test(text)) {
-		  $(this).closest('.edit-post').find('#out').empty().html(text);
-	  }
+		var urls = findUrls(text)
+       
+       if (urls) {
+       		text = urls.join(" ");
+			text = $('<span>'+text+'</span>').text(); //strip html
+			text = text.replace(/(\s|>|^)(https?:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+			text = text.replace(/(\s|>|^)(mailto:[^\s<]*)/igm,'$1<div><a href="$2" class="oembed"></a></div>');
+			 $(this).closest('.edit-post').find('#out').empty().html(text);
+	   }
+	   else {
+		    $(this).closest('.edit-post').find('#out').empty();
+	   }
 		
 		$(".oembed").oembed(null,{
 			apikeys: {
@@ -336,6 +345,12 @@ function getFormattedTime() {
 	}
 	
 	return formatted;
+}
+
+function findUrls(searchText){
+    var regex = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+    result = searchText.match(regex);
+    if(result){return result;}else{return false;}
 }
 
 /**
