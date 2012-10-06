@@ -1,4 +1,19 @@
 class LinksController < ApplicationController
+  # GET /links/proxy
+  # GET /links/proxy.json
+  def proxy
+  	if params['url']
+      @response = RestClient.get params['url']
+    else
+      @response = 'No link passed in.'
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @response }
+    end
+  end
+  
   # GET /links
   # GET /links.json
   def index

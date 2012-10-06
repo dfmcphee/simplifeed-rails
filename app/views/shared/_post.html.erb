@@ -156,7 +156,7 @@
 </div>
 <div id="comment-post-<%= post.id %>" class="collapse comment-post">
   <div class="well">
-		<%= form_tag(:action => 'reply_to_post', :controller => '/users') %>
+		<%= form_tag(:action => "reply_to_post", :controller => '/users') %>
 			<input type="hidden" value="<%= post.id %>" id="reply_to" name="reply_to" />
 		    <div class="modal-body">
 		    	<%= text_area_tag :body %>

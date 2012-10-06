@@ -18,7 +18,7 @@ gem "cancan"
 gem "paperclip", "~> 3.0"
 
 gem "pusher", "~> 0.9.4"
-gem 'em-http-request'
+gem 'rest-client'
 
 gem 'font-awesome-rails'
 

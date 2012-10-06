@@ -43,6 +43,25 @@ div.field_with_errors {
 	min-height: 0px;
 }
 
+.embed-image {
+	text-align:center;
+	background:#DDD;
+	padding:20px;
+	margin-top:10px;
+}
+
+.oembed-show {
+	font-size: 2em;
+}
+
+.to-oembed {
+	margin-bottom: 10px;
+}
+
+.oembedall-container .well {
+	margin-top: 10px;
+}
+
 #add-provider {
 	height:50%;
 	width:50%;
@@ -117,6 +136,10 @@ div.field_with_errors {
 
 .friend-card {
 	margin-bottom:15px;
+}
+
+.oembedall-container div:last-child, .oembedall-container iframe:last-child {
+	display:none;
 }
 
 /*

@@ -67,6 +67,9 @@ Simplifeed::Application.routes.draw do
   
   # Dismiss notification
   match '/mark_as_read' => 'messages#mark_as_read'
+  
+  # Proxy requests
+  match '/links/proxy' => 'links#proxy'
 
   # Resources for posts
   resources :posts

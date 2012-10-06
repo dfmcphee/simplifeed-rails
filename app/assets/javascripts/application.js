@@ -240,6 +240,7 @@ $(document).ready(function() {
 	   }
 		
 		$(".oembed").oembed(null,{
+			embedMethod: 'append',
 			apikeys: {
 				//etsy : 'd0jq4lmfi5bjbrxq2etulmjr',
 				amazon : 'caterwall-20',

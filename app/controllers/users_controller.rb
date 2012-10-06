@@ -26,7 +26,27 @@ class UsersController < ApplicationController
     			name = poster.username
     		end
     		
-    		posts.push({:name => name, :avatar => poster.photo.url(:thumb), :content => item.content, :created_at => item.created_at})
+    		comments = Post.where(:reply_to => item.id)
+    		
+    		post_comments = []
+    		
+    		comments.each do |comment|
+    			poster = User.find(comment.user_id)
+    		
+	    		if !poster.first_name.nil? && poster.first_name != ''
+	    			name = poster.first_name + ' ' + poster.last_name
+	    		else
+	    			name = poster.username
+	    		end
+	    		
+	    		user = {:name => name, :username => poster.username, :avatar => poster.photo.url(:thumb)}
+	    		
+	    		post_comments.push({:user => user, :content => comment.content, :created_at => comment.created_at})
+    		end
+    		
+    		user = {:name => name, :username => poster.username, :avatar => poster.photo.url(:thumb)}
+    		
+    		posts.push({:user => user, :content => item.content, :created_at => item.created_at, :comments => post_comments})
     	end
     	
     	@simplifeed = posts
