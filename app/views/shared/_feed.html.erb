@@ -1,4 +1,4 @@
-<% if @simplifeed.empty? && active === 'feed' %>
+<% if !@simplifeed.nil? && @simplifeed.empty? && active === 'feed' %>
 	<div class="row-fluid">
 		<div class="span12 hero-unit">
 			<h2>Welcome to Simplifeed.</h2>
@@ -54,6 +54,20 @@
 		  <% else %>
 		  	<li><a href="/feed"><i class="icon-cloud"></i> Feed</a></li>
 		  <% end %>
+		  <% if @authorized_providers.include?('twitter') %>
+			  <% if active === 'twitter' %>
+			  	 <li class="active"><a href="/twitter"><i class="icon-twitter"></i> Twitter</a></li>
+			  <% else %>
+			  	 <li><a href="/twitter"><i class="icon-twitter"></i> Twitter</a></li>
+			  <% end %>
+		  <% end %>
+		  <% if @authorized_providers.include?('facebook') %>
+			  <% if active === 'facebook' %>
+			  	 <li class="active"><a href="/facebook"><i class="icon-facebook"></i> Facebook</a></li>
+			  <% else %>
+			  	 <li><a href="/facebook"><i class="icon-facebook"></i> Facebook</a></li>
+			  <% end %>
+		  <% end %>
 		  <% if active === 'mentions' %>
 		  	 <li class="active"><a href="/mentions"><i class="icon-bullhorn"></i> Mentions</a></li>
 		  <% else %>
@@ -97,7 +111,11 @@
 			</form>
 		</div>
 	  </div>
-	  <% if @simplifeed.empty? %>
+	  <% if !@updates.nil? && !@updates.empty? %>
+	  	  <% @updates.each do |update| %>
+		  	<%= render "shared/update", :update => update, :single_post => false %>
+		  	<% end %>
+	  <% elsif @simplifeed.nil? || @simplifeed.empty? %>
 	  	<div class="well post-item">
 		  	<div class="row-fluid">
 		  		<div class="span12">
@@ -107,9 +125,7 @@
 	  	</div>
 	  <% else %>
 		  <% @simplifeed.sort {|a, b| a[:created_at] <=> b[:created_at]}.reverse.each do |post| %>
-		  	
 		  	<%= render "shared/post", :post => post, :single_post => false %>
-		  	
 		  <% end %>
 	  <% end %>
 	</div>

@@ -1,0 +1,33 @@
+<% if !update.what.nil? && !update.what.empty? %>
+	<div class="well post-item">
+		<div class="row-fluid">
+		    <div class="span6 inline-mobile">
+		    	<p class="lead">
+			    	<%= update.who %>
+		    	</p>
+		    </div>
+		    <div class="span6 pull-right align-right inline-mobile">
+		    	<abbr class="timeago" title="<%=update.when%>"><%=update.when%></abbr>
+		    </div>
+		</div>
+		<div class="row-fluid">
+		    <div class="profile-image span2 inline-mobile">
+		    	<%= image_tag(update.pic) %>
+		    </div>
+		    <% 
+			    
+			    content = update.what.gsub(/(?<!\w)@\w+/, '<a href="\0">\0</a>')
+			    
+			    content = content.gsub('<a href="@', '<a href="')
+			    
+		    %>
+		    <% 
+			    
+			    content = auto_link(content, :html => { :class => 'to-oembed' })do |text|
+				    truncate(text, :length => 28)
+				end
+		    %>
+		    <div class="post-content span10 inline-mobile"><%= raw(content) %></div>
+		</div>
+	</div>
+<% end %>

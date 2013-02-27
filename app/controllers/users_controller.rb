@@ -8,6 +8,7 @@ class UsersController < ApplicationController
     	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
     end
     @updates = []
+    
     friends = current_user.inverse_friends.map(&:id) + current_user.friends.map(&:id) + [current_user.id]
 
     @users = User.find(:all, :select=>'username').map(&:username)
@@ -17,7 +18,8 @@ class UsersController < ApplicationController
     
     if request.format === 'json'
     	posts = []
-    	@simplifeed.each do |item|	
+    	
+    	@simplifeed.each do |item|
     		poster = User.find(item.user_id)
     		
     		if !poster.first_name.nil? && poster.first_name != ''
@@ -54,7 +56,7 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: {'feed' => @simplifeed}, :callback => params[:callback] }
+      format.json { render json: {'feed' => @simplifeed, 'updates' => @updates}, :callback => params[:callback] }
     end
   end
   

@@ -33,6 +33,32 @@ class PostsController < ApplicationController
       format.json { render json: @post }
     end
   end
+  
+  def facebook
+  	@providers = %w(facebook)
+    if current_user
+    	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
+    end
+    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'updates' => @updates} }
+    end
+  end
+  
+  def twitter
+  	@providers = %w(twitter)
+    if current_user
+    	@authorized_providers = Authentication.where(:user_id => current_user.id).pluck(:provider)
+    end
+    @updates = current_user ? current_user.authentications.where(:provider => @providers).collect {|auth| auth.service.feed }.flatten : []
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: {'updates' => @updates} }
+    end
+  end
 
   def mentions
   	 @providers = %w(facebook twitter)

@@ -11,7 +11,7 @@ class Ability
 	    # Posts
 	    can :show, Post, :user_id => friends
 	    can :destroy, Post, :user_id => user.id
-	    can [:like_post, :mentions, :favs], Post
+	    can [:like_post, :mentions, :twitter, :facebook, :favs], Post
     end
     #
     # The first argument to `can` is the action you are giving the user permission to do.

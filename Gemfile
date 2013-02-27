@@ -1,23 +1,24 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.3'
-gem 'rake', '0.9.2.2'
-gem "bundler", "~> 1.1.4"
+gem "rails", "~> 3.2.12"
+gem 'rake'
+gem "bundler"
 gem 'sqlite3'
-gem "mysql2", "~> 0.3.11"
+gem 'mysql2'
 gem 'json'
 gem 'rails_autolink'
 
+gem 'nokogiri'
 
-gem "devise", "~> 2.1.0"
-gem "devise_lastseenable", "~> 0.0.4"
-gem "devise_invitable", "~> 1.1.0"
+gem "devise"
+gem "devise_lastseenable"
+gem "devise_invitable"
 
 gem "cancan"
 
-gem "paperclip", "~> 3.0"
+gem "paperclip"
 
-gem "pusher", "~> 0.9.4"
+gem "pusher"
 gem 'rest-client'
 
 gem 'font-awesome-rails'
