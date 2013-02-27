@@ -1,7 +1,7 @@
 Welcome to Simplifeed
 =====================
 
-Version: 0.0.7
+Version: 0.0.8
 
 About
 -----
@@ -11,10 +11,10 @@ Simplifeed is a free open source social network based on privacy with developers
 Requirements
 ------------
 
-*These are only the versions tested on. Others may work but will not be supported.
+*These are only the versions currently tested on. Others may work but will not be supported.
 
 Ruby 1.9.3
-Rails 3.2.3
+Rails 3.2.12
 
 Getting Started
 ---------------
@@ -22,6 +22,8 @@ Getting Started
 First add all your network api keys in config/oauth.yml
 
 Edit your config/database.yml with your database authentication
+
+Add your Pusher (http://pusher.com/) api keys to config/initializers/pusher.rb
 
 To install all the gems necessary enter in the command line:
 `bundle install`
