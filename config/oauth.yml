@@ -1,0 +1,18 @@
+development: &defaults
+  :twitter:
+    :app_id: "___APP_ID___"
+    :app_secret: "___APP_SECRET___"
+  :facebook:
+    :app_id: "___APP_ID___"
+    :app_secret: "___APP_SECRET___"
+    :options:
+      :scope: "publish_stream,read_stream"
+
+staging:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
